@@ -2,22 +2,32 @@
  * @file OttoLee.h
  * @author your name (you@domain.com)
  * @brief 
- * @version 0.1
- * @date 2020-11-20
+ * @version 1.0
+ * @date 2021-01-21
  * 
- * @copyright Copyright (c) 2020
+ * @copyright Copyright (c) 2021
  * 
+ * This program is free software: you can redistribute it and/or modify  
+ * it under the terms of the GNU General Public License as published by  
+ * the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OttoLee_h
-#define OttoLee_h
+#ifndef OTTOLEE_h
+#define OTTOLEE_h
 
 #include <Servo.h>
 #include <Oscillator.h>
 #include <US.h>
 #include <EEPROM.h>
-#include <TimerFreeTone.h>
-#include <Otto_sound9.h>
+#include "OttoSound.h"
 
 //-- Constants
 #define FORWARD     1
@@ -28,16 +38,28 @@
 #define MEDIUM      15
 #define BIG         30
 
+typedef enum {
+    LEG_L = 0, 
+    LEG_R = 1, 
+    FOOT_L = 2, 
+    FOOT_R = 3, 
+    ARM_L = 4, 
+    ARM_R = 5, 
+    HEAD = 6
+}ottoLeeServo_TEnum;
 
-class OttoLee
+/**
+ * @brief 
+ * 
+ */
+class OttoLee : public OttoSound
 {
     private:
         Oscillator _servo[7];
         US _us;
-        uint8_t _servo_pins[7];
+        uint8_t _pinServo[7];
         //int _servo_trim[7];
         uint8_t _servo_position[7];
-        uint8_t _pinBuzzer;
         uint8_t _pinNoiseSensor;
         bool _isOttoResting;
 
@@ -48,17 +70,16 @@ class OttoLee
         //-- Predetermined Motion Functions
         
         void _moveSingle(int position, int servo_number);
-        void _execute(int A[7], int O[7], int T, double phase_diff[7], float steps);
-        //-- Sounds
-        void _tone (float noteFrequency, long noteDuration, int silentDuration);
+        void _execute(int A[7], int O[7], int T, double phase_diff[7], float steps = 1.0);
     public:
+        OttoLee(const uint8_t *pinServo, uint8_t pinBuzzer);
         //-- Otto initialization
-        void init(uint8_t LEG_L, uint8_t LEG_R, uint8_t FOOT_L, uint8_t FOOT_R, uint8_t ARM_L, uint8_t ARM_R, uint8_t HEAD, bool load_calibration, uint8_t NoiseSensor, uint8_t Buzzer, uint8_t USTrigger, uint8_t USEcho);
+        void init(bool load_calibration, uint8_t NoiseSensor, uint8_t USTrigger, uint8_t USEcho);
         //-- Attach & detach functions
         void attachServos();
         void detachServos();
         //-- Oscillator Trims
-        void setTrims(int8_t LEG_L, int8_t LEG_R, int8_t FOOT_L, int8_t FOOT_R, int8_t ARM_L, int8_t ARM_R, int8_t HEAD);
+        void setTrims(int8_t legLeft, int8_t legRight, int8_t footLeft, int8_t footRight, int8_t armLeft, int8_t armRight, int8_t head);
         void saveTrimsOnEEPROM();
         //-- Predetermined Motion Functions
         void _moveServos(int time, int  servo_target[]);
@@ -87,11 +108,8 @@ class OttoLee
         //-- Sensors functions
         float getDistance(); //US sensor
         int getNoise();      //Noise Sensor
-        //-- Sounds
-        void bendTones(float initFrequency, float finalFrequency, float prop, long noteDuration, int silentDuration);
-        void sing(int songName);
 };
 
 
-#endif //OttoLee_h
+#endif //OTTOLEE_h
 

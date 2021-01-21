@@ -1,0 +1,60 @@
+#######################################
+# Syntax Coloring Map For OttoLeeArduinoLib
+#######################################
+# Class
+#######################################
+
+OttoLee			KEYWORD1
+OttoSound       KEYWORD1
+
+#######################################
+# Datatypes
+#######################################
+DIGITnum_t		KEYWORD1
+LEDnum_t		KEYWORD1
+
+#######################################
+# Methods and Functions
+#######################################	
+
+init					KEYWORD2
+attachServos			KEYWORD2
+detachServos			KEYWORD2
+setTrims				KEYWORD2
+saveTrimsOnEEPROM		KEYWORD2
+
+bendTones               KEYWORD2
+sing                    KEYWORD2
+
+#######################################
+# Constants
+#######################################
+
+FORWARD			LITERAL1
+BACKWARD    	LITERAL1
+LEFT        	LITERAL1
+RIGHT       	LITERAL1
+SMALL       	LITERAL1
+MEDIUM      	LITERAL1
+BIG         	LITERAL1
+
+S_connection        LITERAL1
+S_disconnection     LITERAL1
+S_buttonPushed 	    LITERAL1
+S_mode1 		    LITERAL1
+S_mode2 		    LITERAL1
+S_mode3 		    LITERAL1
+S_surprise 		    LITERAL1
+S_OhOoh 		    LITERAL1
+S_OhOoh2 		    LITERAL1
+S_cuddly 		    LITERAL1
+S_sleeping 		    LITERAL1
+S_happy 		    LITERAL1
+S_superHappy 	    LITERAL1
+S_happy_short 	    LITERAL1
+S_sad 			    LITERAL1
+S_confused 		    LITERAL1
+S_fart1			    LITERAL1
+S_fart2			    LITERAL1
+S_fart3			    LITERAL1
+    

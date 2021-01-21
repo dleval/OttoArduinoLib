@@ -1,32 +1,40 @@
+/**
+ * @file OttoLee.cpp
+ * @author David LEVAL (dleval@senstronic.com)
+ * @version 1.0
+ * @date 2021-01-21
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ * This program is free software: you can redistribute it and/or modify  
+ * it under the terms of the GNU General Public License as published by  
+ * the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include <Arduino.h>
 #include <OttoLee.h>
 
-/**
- * @brief 
- * 
- * @param LEG_L 
- * @param LEG_R 
- * @param FOOT_L 
- * @param FOOT_R 
- * @param ARM_L 
- * @param ARM_R 
- * @param HEAD 
- * @param load_calibration 
- * @param NoiseSensor 
- * @param Buzzer 
- * @param USTrigger 
- * @param USEcho 
- */
-void OttoLee::init(uint8_t LEG_L, uint8_t LEG_R, uint8_t FOOT_L, uint8_t FOOT_R, uint8_t ARM_L, uint8_t ARM_R, uint8_t HEAD, bool load_calibration, uint8_t NoiseSensor, uint8_t Buzzer, uint8_t USTrigger, uint8_t USEcho)
-{
-    _servo_pins[0] = LEG_L;
-    _servo_pins[1] = LEG_R;
-    _servo_pins[2] = FOOT_L;
-    _servo_pins[3] = FOOT_R;
-    _servo_pins[4] = ARM_L;
-    _servo_pins[5] = ARM_R;
-    _servo_pins[6] = HEAD;
+OttoLee::OttoLee(const uint8_t *pinServo, uint8_t pinBuzzer) : OttoSound(pinBuzzer) {
+    _pinServo[LEG_L] = pinServo[LEG_L];
+    _pinServo[LEG_R] = pinServo[LEG_R];
+    _pinServo[FOOT_L] = pinServo[FOOT_L];
+    _pinServo[FOOT_R] = pinServo[FOOT_R];
+    _pinServo[ARM_L] = pinServo[ARM_L];
+    _pinServo[ARM_R] = pinServo[ARM_R];
+    _pinServo[HEAD] = pinServo[HEAD];
+}
 
+
+void OttoLee::init(bool load_calibration, uint8_t NoiseSensor, uint8_t USTrigger, uint8_t USEcho)
+{
     attachServos();
     _isOttoResting=false;
 
@@ -45,10 +53,8 @@ void OttoLee::init(uint8_t LEG_L, uint8_t LEG_R, uint8_t FOOT_L, uint8_t FOOT_R,
 
 
     //Buzzer & noise sensor pins: 
-    _pinBuzzer = Buzzer;
     _pinNoiseSensor = NoiseSensor;
 
-    pinMode(Buzzer,OUTPUT);
     pinMode(NoiseSensor,INPUT);
 
 }
@@ -61,16 +67,17 @@ void OttoLee::init(uint8_t LEG_L, uint8_t LEG_R, uint8_t FOOT_L, uint8_t FOOT_R,
 /**
  * @brief 
  * 
+ * @param pinServo 
  */
 void OttoLee::attachServos()
 {
-    _servo[0].attach(_servo_pins[0]);
-    _servo[1].attach(_servo_pins[1]);
-    _servo[2].attach(_servo_pins[2]);
-    _servo[3].attach(_servo_pins[3]);
-    _servo[4].attach(_servo_pins[4]);
-    _servo[5].attach(_servo_pins[5]);
-    _servo[6].attach(_servo_pins[6]);
+    _servo[LEG_L].attach(_pinServo[LEG_L]);
+    _servo[LEG_R].attach(_pinServo[LEG_R]);
+    _servo[FOOT_L].attach(_pinServo[FOOT_L]);
+    _servo[FOOT_R].attach(_pinServo[FOOT_R]);
+    _servo[ARM_L].attach(_pinServo[ARM_L]);
+    _servo[ARM_R].attach(_pinServo[ARM_R]);
+    _servo[HEAD].attach(_pinServo[HEAD]);
 }
 
 /**
@@ -79,13 +86,13 @@ void OttoLee::attachServos()
  */
 void OttoLee::detachServos()
 {
-    _servo[0].detach();
-    _servo[1].detach();
-    _servo[2].detach();
-    _servo[3].detach();
-    _servo[4].detach();
-    _servo[5].detach();
-    _servo[6].detach();
+    _servo[LEG_L].detach();
+    _servo[LEG_R].detach();
+    _servo[FOOT_L].detach();
+    _servo[FOOT_R].detach();
+    _servo[ARM_L].detach();
+    _servo[ARM_R].detach();
+    _servo[HEAD].detach();
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -103,15 +110,15 @@ void OttoLee::detachServos()
  * @param ARM_R 
  * @param HEAD 
  */
-void OttoLee::setTrims(int8_t LEG_L, int8_t LEG_R, int8_t FOOT_L, int8_t FOOT_R, int8_t ARM_L, int8_t ARM_R, int8_t HEAD)
-{
-    _servo[0].SetTrim(LEG_L);
-    _servo[1].SetTrim(LEG_R);
-    _servo[2].SetTrim(FOOT_L);
-    _servo[3].SetTrim(FOOT_R);
-    _servo[4].SetTrim(ARM_L);
-    _servo[5].SetTrim(ARM_R);
-    _servo[6].SetTrim(HEAD);
+void OttoLee::setTrims(int8_t legLeft, int8_t legRight, int8_t footLeft, int8_t footRight, int8_t armLeft, int8_t armRight, int8_t head)
+{ 
+    _servo[LEG_L].SetTrim(legLeft);
+    _servo[LEG_R].SetTrim(legRight);
+    _servo[FOOT_L].SetTrim(footLeft);
+    _servo[FOOT_R].SetTrim(footRight);
+    _servo[ARM_L].SetTrim(armLeft);
+    _servo[ARM_R].SetTrim(armRight);
+    _servo[HEAD].SetTrim(head);
 }
 
 /**
@@ -197,7 +204,7 @@ void OttoLee::_moveSingle(int position, int servo_number)
 }
 
 
-void OttoLee::oscillateServos(int A[7], int O[7], int T, double phase_diff[7], float cycle=1)
+void OttoLee::oscillateServos(int A[7], int O[7], int T, double phase_diff[7], float cycle)
 {
 
   for (int i=0; i<7; i++) {
@@ -215,7 +222,7 @@ void OttoLee::oscillateServos(int A[7], int O[7], int T, double phase_diff[7], f
 }
 
 
-void OttoLee::_execute(int A[7], int O[7], int T, double phase_diff[7], float steps = 1.0)
+void OttoLee::_execute(int A[7], int O[7], int T, double phase_diff[7], float steps)
 {
     attachServos();
     if(getRestState()==true){
@@ -683,159 +690,3 @@ int OttoLee::getNoise()
 
     return noiseLevel;
 }
-
-
-///////////////////////////////////////////////////////////////////
-//-- SOUNDS -----------------------------------------------------//
-///////////////////////////////////////////////////////////////////
-
-void OttoLee::_tone (float noteFrequency, long noteDuration, int silentDuration)
-{
-    // tone(10,261,500);
-    // delay(500);
-
-    if(silentDuration==0){silentDuration=1;}
-
-    TimerFreeTone(OttoLee::_pinBuzzer, noteFrequency, noteDuration);
-    //delay(noteDuration);       //REMOVED FOR TimerFreeTone, PUT BACK for TONE       milliseconds to microseconds
-    //noTone(PIN_Buzzer);
-      
-    delay(silentDuration);     //
-}
-
-void OttoLee::bendTones (float initFrequency, float finalFrequency, float prop, long noteDuration, int silentDuration)
-{
-    //Examples:
-    //  bendTones (880, 2093, 1.02, 18, 1);
-    //  bendTones (note_A5, note_C7, 1.02, 18, 0);
-
-    if(silentDuration==0){silentDuration=1;}
-
-    if(initFrequency < finalFrequency)
-    {
-        for (int i=initFrequency; i<finalFrequency; i=i*prop) {
-            _tone(i, noteDuration, silentDuration);
-        }
-
-    } else{
-
-        for (int i=initFrequency; i>finalFrequency; i=i/prop) {
-            _tone(i, noteDuration, silentDuration);
-        }
-    }
-}
-
-
-void OttoLee::sing(int songName){
-  switch(songName){
-
-    case S_connection:
-      _tone(note_E5,50,30);
-      _tone(note_E6,55,25);
-      _tone(note_A6,60,10);
-    break;
-
-    case S_disconnection:
-      _tone(note_E5,50,30);
-      _tone(note_A6,55,25);
-      _tone(note_E6,50,10);
-    break;
-
-    case S_buttonPushed:
-      bendTones (note_E6, note_G6, 1.03, 20, 2);
-      delay(30);
-      bendTones (note_E6, note_D7, 1.04, 10, 2);
-    break;
-
-    case S_mode1:
-      bendTones (note_E6, note_A6, 1.02, 30, 10);  //1318.51 to 1760
-    break;
-
-    case S_mode2:
-      bendTones (note_G6, note_D7, 1.03, 30, 10);  //1567.98 to 2349.32
-    break;
-
-    case S_mode3:
-      _tone(note_E6,50,100); //D6
-      _tone(note_G6,50,80);  //E6
-      _tone(note_D7,300,0);  //G6
-    break;
-
-    case S_surprise:
-      bendTones(800, 2150, 1.02, 10, 1);
-      bendTones(2149, 800, 1.03, 7, 1);
-    break;
-
-    case S_OhOoh:
-      bendTones(880, 2000, 1.04, 8, 3); //A5 = 880
-      delay(200);
-
-      for (int i=880; i<2000; i=i*1.04) {
-           _tone(note_B5,5,10);
-      }
-    break;
-
-    case S_OhOoh2:
-      bendTones(1880, 3000, 1.03, 8, 3);
-      delay(200);
-
-      for (int i=1880; i<3000; i=i*1.03) {
-          _tone(note_C6,10,10);
-      }
-    break;
-
-    case S_cuddly:
-      bendTones(700, 900, 1.03, 16, 4);
-      bendTones(899, 650, 1.01, 18, 7);
-    break;
-
-    case S_sleeping:
-      bendTones(100, 500, 1.04, 10, 10);
-      delay(500);
-      bendTones(400, 100, 1.04, 10, 1);
-    break;
-
-    case S_happy:
-      bendTones(1500, 2500, 1.05, 20, 8);
-      bendTones(2499, 1500, 1.05, 25, 8);
-    break;
-
-    case S_superHappy:
-      bendTones(2000, 6000, 1.05, 8, 3);
-      delay(50);
-      bendTones(5999, 2000, 1.05, 13, 2);
-    break;
-
-    case S_happy_short:
-      bendTones(1500, 2000, 1.05, 15, 8);
-      delay(100);
-      bendTones(1900, 2500, 1.05, 10, 8);
-    break;
-
-    case S_sad:
-      bendTones(880, 669, 1.02, 20, 200);
-    break;
-
-    case S_confused:
-      bendTones(1000, 1700, 1.03, 8, 2); 
-      bendTones(1699, 500, 1.04, 8, 3);
-      bendTones(1000, 1700, 1.05, 9, 10);
-    break;
-
-    case S_fart1:
-      bendTones(1600, 3000, 1.02, 2, 15);
-    break;
-
-    case S_fart2:
-      bendTones(2000, 6000, 1.02, 2, 20);
-    break;
-
-    case S_fart3:
-      bendTones(1600, 4000, 1.02, 2, 20);
-      bendTones(4000, 3000, 1.02, 2, 20);
-    break;
-
-  }
-}
-
-

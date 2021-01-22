@@ -22,250 +22,19 @@
 #include <Arduino.h>
 #include <OttoLee.h>
 
-OttoLee::OttoLee(const uint8_t *pinServo, uint8_t pinBuzzer) : OttoSound(pinBuzzer) {
-    _pinServo[LEG_L] = pinServo[LEG_L];
-    _pinServo[LEG_R] = pinServo[LEG_R];
-    _pinServo[FOOT_L] = pinServo[FOOT_L];
-    _pinServo[FOOT_R] = pinServo[FOOT_R];
-    _pinServo[ARM_L] = pinServo[ARM_L];
-    _pinServo[ARM_R] = pinServo[ARM_R];
-    _pinServo[HEAD] = pinServo[HEAD];
-}
-
-
-void OttoLee::init(bool load_calibration, uint8_t NoiseSensor, uint8_t USTrigger, uint8_t USEcho)
-{
-    attachServos();
-    _isOttoResting=false;
-
-    if (load_calibration) {
-        for (uint8_t i = 0; i < 7; i++) {
-        int servo_trim = EEPROM.read(i);
-        if (servo_trim > 128) servo_trim -= 256;
-        _servo[i].SetTrim(servo_trim);
-        }
-    }
-
-    for (int i = 0; i < 7; i++) _servo_position[i] = 90;
-
-    //US sensor init with the pins:
-    _us.init(USTrigger, USEcho);
-
-
-    //Buzzer & noise sensor pins: 
-    _pinNoiseSensor = NoiseSensor;
-
-    pinMode(NoiseSensor,INPUT);
-
-}
-
-
-///////////////////////////////////////////////////////////////////
-//-- ATTACH & DETACH FUNCTIONS ----------------------------------//
-///////////////////////////////////////////////////////////////////
-
-/**
- * @brief 
- * 
- * @param pinServo 
- */
-void OttoLee::attachServos()
-{
-    _servo[LEG_L].attach(_pinServo[LEG_L]);
-    _servo[LEG_R].attach(_pinServo[LEG_R]);
-    _servo[FOOT_L].attach(_pinServo[FOOT_L]);
-    _servo[FOOT_R].attach(_pinServo[FOOT_R]);
-    _servo[ARM_L].attach(_pinServo[ARM_L]);
-    _servo[ARM_R].attach(_pinServo[ARM_R]);
-    _servo[HEAD].attach(_pinServo[HEAD]);
-}
-
-/**
- * @brief 
- * 
- */
-void OttoLee::detachServos()
-{
-    _servo[LEG_L].detach();
-    _servo[LEG_R].detach();
-    _servo[FOOT_L].detach();
-    _servo[FOOT_R].detach();
-    _servo[ARM_L].detach();
-    _servo[ARM_R].detach();
-    _servo[HEAD].detach();
-}
-
-///////////////////////////////////////////////////////////////////
-//-- OSCILLATORS TRIMS ------------------------------------------//
-///////////////////////////////////////////////////////////////////
-
-/**
- * @brief 
- * 
- * @param LEG_L 
- * @param LEG_R 
- * @param FOOT_L 
- * @param FOOT_R 
- * @param ARM_L 
- * @param ARM_R 
- * @param HEAD 
- */
-void OttoLee::setTrims(int8_t legLeft, int8_t legRight, int8_t footLeft, int8_t footRight, int8_t armLeft, int8_t armRight, int8_t head)
-{ 
-    _servo[LEG_L].SetTrim(legLeft);
-    _servo[LEG_R].SetTrim(legRight);
-    _servo[FOOT_L].SetTrim(footLeft);
-    _servo[FOOT_R].SetTrim(footRight);
-    _servo[ARM_L].SetTrim(armLeft);
-    _servo[ARM_R].SetTrim(armRight);
-    _servo[HEAD].SetTrim(head);
-}
-
-/**
- * @brief 
- * 
- */
-void OttoLee::saveTrimsOnEEPROM() 
-{
-    for (int i = 0; i < 4; i++){ 
-        EEPROM.write(i, _servo[i].getTrim());
-    } 
-}
-
-///////////////////////////////////////////////////////////////////
-//-- BASIC MOTION FUNCTIONS -------------------------------------//
-///////////////////////////////////////////////////////////////////
-
-/**
- * @brief 
- * 
- * @param time 
- * @param servo_target 
- */
-void OttoLee::_moveServos(int time, int  servo_target[]) 
-{
-    attachServos();
-    if(getRestState()==true){
-        setRestState(false);
-    }
-
-    if(time>10){
-        for (int i = 0; i < 7; i++) _increment[i] = ((servo_target[i]) - _servo_position[i]) / (time / 10.0);
-        _final_time =  millis() + time;
-
-        for (int iteration = 1; millis() < _final_time; iteration++) {
-        _partial_time = millis() + 10;
-        for (int i = 0; i < 7; i++) _servo[i].SetPosition(_servo_position[i] + (iteration * _increment[i]));
-        while (millis() < _partial_time); //pause
-        }
-    }
-    else{
-        for (int i = 0; i < 7; i++) _servo[i].SetPosition(servo_target[i]);
-    }
-    for (int i = 0; i < 7; i++) _servo_position[i] = servo_target[i];
-}
-
-/**
- * @brief 
- * 
- * @param position 
- * @param servo_number 
- */
-void OttoLee::_moveSingle(int position, int servo_number) 
-{
-    if (position > 180) position = 90;
-    if (position < 0) position = 90;
-    attachServos();
-    if(getRestState()==true) {
-        setRestState(false);
-    }
-    int servoNumber = servo_number;
-    if (servoNumber == 0) {
-        _servo[0].SetPosition(position);
-    }
-    if (servoNumber == 1) {
-        _servo[1].SetPosition(position);
-    }
-    if (servoNumber == 2) {
-        _servo[2].SetPosition(position);
-    }
-    if (servoNumber == 3) {
-        _servo[3].SetPosition(position);
-    }
-    if (servoNumber == 4) {
-        _servo[4].SetPosition(position);
-    }
-    if (servoNumber == 5) {
-        _servo[5].SetPosition(position);
-    }
-    if (servoNumber == 6) {
-        _servo[6].SetPosition(position);
-    }
-}
-
-
-void OttoLee::oscillateServos(int A[7], int O[7], int T, double phase_diff[7], float cycle)
+OttoLee::OttoLee(const ottoLeePinServo_TStruct *ottoLeePinServo, uint8_t pinBuzzer, uint8_t pinNoiseSensor) : 
+    OttoSound(pinBuzzer), OttoServo(ottoLeePinServo), OttoSensor(pinNoiseSensor)
 {
 
-  for (int i=0; i<7; i++) {
-    _servo[i].SetO(O[i]);
-    _servo[i].SetA(A[i]);
-    _servo[i].SetT(T);
-    _servo[i].SetPh(phase_diff[i]);
-  }
-  double ref=millis();
-   for (double x=ref; x<=T*cycle+ref; x=millis()){
-     for (int i=0; i<7; i++){
-        _servo[i].refresh();
-     }
-  }
 }
 
 
-void OttoLee::_execute(int A[7], int O[7], int T, double phase_diff[7], float steps)
+void OttoLee::init(bool loadCalibration, uint8_t USTrigger, uint8_t USEcho)
 {
-    attachServos();
-    if(getRestState()==true){
-        setRestState(false);
-    }
-
-    int cycles=(int)steps;    
-
-    //-- Execute complete cycles
-    if (cycles >= 1) {
-        for(int i = 0; i < cycles; i++) {
-            oscillateServos(A,O, T, phase_diff);
-        }
-    }
-        
-    //-- Execute the final not complete cycle    
-    oscillateServos(A,O, T, phase_diff,(float)steps-cycles);
+    OttoServo::init(loadCalibration);
+    OttoSensor::init(USTrigger, USEcho);
 }
 
-///////////////////////////////////////////////////////////////////
-//-- HOME = Otto at rest position -------------------------------//
-///////////////////////////////////////////////////////////////////
-void OttoLee::home(){
-
-  if(_isOttoResting == false){ //Go to rest position only if necessary
-
-    int homes[7] = {90, 90, 90, 90, 90, 90, 90}; //All the servos at rest position
-    _moveServos(500,homes);   //Move the servos in half a second
-
-    detachServos();
-    _isOttoResting = true;
-  }
-}
-
-bool OttoLee::getRestState(){
-
-    return _isOttoResting;
-}
-
-void OttoLee::setRestState(bool state){
-
-    _isOttoResting = state;
-}
 
 ///////////////////////////////////////////////////////////////////
 //-- PREDETERMINED MOTION SEQUENCES -----------------------------//
@@ -280,9 +49,9 @@ void OttoLee::setRestState(bool state){
 void OttoLee::jump(float steps, int T){
 
     int up[7]={90,90,150,30,110,70,90};
-    _moveServos(T,up);
+    moveServos(T,up);
     int down[7]={90,90,90,90,90,90,90};
-    _moveServos(T,down);
+    moveServos(T,down);
 }
 
 /**
@@ -306,7 +75,7 @@ void OttoLee::walk(float steps, int T, int dir, int armOsc, int headOsc)
     double phase_diff[7] = {0, 0, DEG2RAD(dir * -90), DEG2RAD(dir * -90), 0, 0, 0};
 
     //-- Let's oscillate the servos!
-    _execute(A, O, T, phase_diff, steps);  
+    execute(A, O, T, phase_diff, steps);  
 }
 
 /**
@@ -337,7 +106,7 @@ void OttoLee::turn(float steps, int T, int dir, int armOsc, int headOsc)
     }
         
     //-- Let's oscillate the servos!
-    _execute(A, O, T, phase_diff, steps); 
+    execute(A, O, T, phase_diff, steps); 
 }
 
 /**
@@ -372,10 +141,10 @@ void OttoLee::bend(int steps, int T, int dir)
     //Bend movement
     for (int i=0;i<steps;i++)
     {
-        _moveServos(T2/2,bend1);
-        _moveServos(T2/2,bend2);
+        moveServos(T2/2,bend1);
+        moveServos(T2/2,bend2);
         delay(T*0.8);
-        _moveServos(500,homes);
+        moveServos(500,homes);
     }
 }
 
@@ -418,16 +187,16 @@ void OttoLee::shakeLeg(int steps,int T,int dir){
     for (int j=0; j<steps;j++)
     {
     //Bend movement
-    _moveServos(T2/2,shake_leg1);
-    _moveServos(T2/2,shake_leg2);
+    moveServos(T2/2,shake_leg1);
+    moveServos(T2/2,shake_leg2);
     
         //Shake movement
         for (int i=0;i<numberLegMoves;i++)
         {
-        _moveServos(T/(2*numberLegMoves),shake_leg3);
-        _moveServos(T/(2*numberLegMoves),shake_leg2);
+        moveServos(T/(2*numberLegMoves),shake_leg3);
+        moveServos(T/(2*numberLegMoves),shake_leg2);
         }
-        _moveServos(500,homes); //Return to home position
+        moveServos(500,homes); //Return to home position
     }
     
     delay(T);
@@ -451,7 +220,7 @@ void OttoLee::updown(float steps, int T, int h)
     double phase_diff[7] = {0, 0, DEG2RAD(-90), DEG2RAD(90),DEG2RAD(-90), DEG2RAD(90) , 0};
     
     //-- Let's oscillate the servos!
-    _execute(A, O, T, phase_diff, steps); 
+    execute(A, O, T, phase_diff, steps); 
 }
 
 /**
@@ -461,7 +230,7 @@ void OttoLee::updown(float steps, int T, int h)
 void OttoLee::handsup()
 {
     int homes[7]={90, 90, 90, 90, 20, 160, 90}; //
-    _moveServos(500,homes);   //Move the servos in half a second
+    moveServos(500,homes);   //Move the servos in half a second
 }
 
 /**
@@ -477,7 +246,7 @@ void OttoLee::handwave(int dir)
         int O[7] = {0, 0, 0, 0, -30, -40, 0};
         double phase_diff[7] = {0, 0, 0, 0, DEG2RAD(0), 0, 0};
             //-- Let's oscillate the servos!
-        _execute(A, O, 500, phase_diff, 5); 
+        execute(A, O, 500, phase_diff, 5); 
     }
     if(dir==1)      
     {
@@ -485,7 +254,7 @@ void OttoLee::handwave(int dir)
         int O[7] = {0, 0, 0, 0, 40, 60, 0};
         double phase_diff[7] = {0, 0, 0, 0, 0, DEG2RAD(0), 0};
             //-- Let's oscillate the servos!
-        _execute(A, O, 500, phase_diff, 1); 
+        execute(A, O, 500, phase_diff, 1); 
     }  
 }
 
@@ -505,7 +274,7 @@ void OttoLee::swing(float steps, int T, int h)
     double phase_diff[7] = {0, 0, DEG2RAD(0), DEG2RAD(0), DEG2RAD(0), DEG2RAD(0), 0};
     
     //-- Let's oscillate the servos!
-    _execute(A, O, T, phase_diff, steps); 
+    execute(A, O, T, phase_diff, steps); 
 }
 
 /**
@@ -524,7 +293,7 @@ void OttoLee::tiptoeSwing(float steps, int T, int h){
     double phase_diff[7] = {0, 0, 0, 0, 0, 0, 0};
     
     //-- Let's oscillate the servos!
-    _execute(A, O, T, phase_diff, steps); 
+    execute(A, O, T, phase_diff, steps); 
 }
 
 /**
@@ -547,7 +316,7 @@ void OttoLee::jitter(float steps, int T, int h){
     double phase_diff[7] = {DEG2RAD(-90), DEG2RAD(90), 0, 0, 0, 0, 0};
     
     //-- Let's oscillate the servos!
-    _execute(A, O, T, phase_diff, steps); 
+    execute(A, O, T, phase_diff, steps); 
 }
 
 /**
@@ -569,7 +338,7 @@ void OttoLee::ascendingTurn(float steps, int T, int h)
     double phase_diff[7] = {DEG2RAD(-90), DEG2RAD(90), DEG2RAD(-90), DEG2RAD(90), 0, 0, 0};
     
     //-- Let's oscillate the servos!
-    _execute(A, O, T, phase_diff, steps); 
+    execute(A, O, T, phase_diff, steps); 
 }
 
 /**
@@ -598,7 +367,7 @@ void OttoLee::moonwalker(float steps, int T, int h, int dir)
     double phase_diff[7] = {0, 0, DEG2RAD(phi), DEG2RAD(-60 * dir + phi), DEG2RAD(phi), DEG2RAD(phi), 0};
     
     //-- Let's oscillate the servos!
-    _execute(A, O, T, phase_diff, steps); 
+    execute(A, O, T, phase_diff, steps); 
 }
 
 /**
@@ -616,7 +385,7 @@ void OttoLee::crusaito(float steps, int T, int h, int dir)
     double phase_diff[7] = {90, 90, DEG2RAD(0), DEG2RAD(-60 * dir), 0, 0, 0};
     
     //-- Let's oscillate the servos!
-    _execute(A, O, T, phase_diff, steps); 
+    execute(A, O, T, phase_diff, steps); 
 }
 
 /**
@@ -634,7 +403,7 @@ void OttoLee::flapping(float steps, int T, int h, int dir)
     double phase_diff[7] = {DEG2RAD(0), DEG2RAD(180), DEG2RAD(-90 * dir), DEG2RAD(90 * dir), 0, 0, 0};
     
     //-- Let's oscillate the servos!
-    _execute(A, O, T, phase_diff, steps); 
+    execute(A, O, T, phase_diff, steps); 
 }
 
 /**
@@ -647,46 +416,5 @@ void OttoLee::headNo(float steps, int T)
     int O[7] = {0, 0, 0, 0, 0, 0, 0};
     double phase_diff[7] = {0, 0, 0, 0, 0, 0, DEG2RAD(0)};
     //-- Let's oscillate the servos!
-    _execute(A, O, T, phase_diff, steps); 
-}
-
-///////////////////////////////////////////////////////////////////
-//-- SENSORS FUNCTIONS  -----------------------------------------//
-///////////////////////////////////////////////////////////////////
-
-//---------------------------------------------------------
-//-- Otto getDistance: return Otto's ultrasonic sensor measure
-//---------------------------------------------------------
-
-/**
- * @brief return Otto's ultrasonic sensor measure
- * 
- * @return float distance measurement
- */
-float OttoLee::getDistance()
-{
-    return _us.read();
-}
-
-/**
- * @brief return Otto's noise sensor measure
- * 
- * @return int noise measurement
- */
-int OttoLee::getNoise()
-{
-    int noiseLevel = 0;
-    int noiseReadings = 0;
-    int numReadings = 2;  
-
-    noiseLevel = analogRead(_pinNoiseSensor);
-
-    for(int i=0; i<numReadings; i++){
-        noiseReadings += analogRead(_pinNoiseSensor);
-        delay(4); // delay in between reads for stability
-    }
-
-    noiseLevel = noiseReadings / numReadings;
-
-    return noiseLevel;
+    execute(A, O, T, phase_diff, steps); 
 }

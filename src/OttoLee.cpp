@@ -22,8 +22,8 @@
 #include <Arduino.h>
 #include <OttoLee.h>
 
-OttoLee::OttoLee(const ottoLeePinServo_TStruct *ottoLeePinServo, uint8_t pinBuzzer, uint8_t pinNoiseSensor) : 
-    OttoSound(pinBuzzer), OttoServo(ottoLeePinServo), OttoSensor(pinNoiseSensor)
+OttoLee::OttoLee(uint8_t legLeft, uint8_t legRight, uint8_t footLeft, uint8_t footRight, uint8_t armLeft, uint8_t armRight, uint8_t head, uint8_t pinBuzzer, uint8_t pinNoiseSensor) : 
+    OttoSound(pinBuzzer), OttoServo(legLeft, legRight, footLeft, footRight, armLeft, armRight, head), OttoSensor(pinNoiseSensor)
 {
 
 }

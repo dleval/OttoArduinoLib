@@ -49,7 +49,7 @@ OttoSound::~OttoSound()
  * @param silentDuration    : Duration of silence after note (ms)
  * @param volume            : volume control (1 to 10)
  */
-void OttoSound::_tone (float noteFrequency, uint32_t noteDuration, uint16_t silentDuration, uint8_t volume = 10)
+void OttoSound::_tone (float noteFrequency, uint32_t noteDuration, uint16_t silentDuration, uint8_t volume)
 {
     const uint8_t _tftVolume[] = { 255, 200, 150, 125, 100, 87, 50, 33, 22, 2 }; // Duty for linear volume control.
 
@@ -216,4 +216,72 @@ void OttoSound::sing(uint8_t songName)
             bendTones(4000, 3000, 1.02, 2, 20);
             break;
     }
+}
+
+/**
+ * @brief 
+ * 
+ */
+void OttoSound::r2d2()
+{
+    switch (random(1,7)) {
+        case 1: _r2d2Phrase1(); break;
+        case 2: _r2d2Phrase2(); break;
+        case 3: _r2d2Phrase1(); _r2d2Phrase2(); break;
+        case 4: _r2d2Phrase1(); _r2d2Phrase2(); _r2d2Phrase1(); break;
+        case 5: _r2d2Phrase1(); _r2d2Phrase2(); _r2d2Phrase1(); _r2d2Phrase2(); _r2d2Phrase1(); break;
+        case 6: _r2d2Phrase2(); _r2d2Phrase1(); _r2d2Phrase2(); break;
+    }
+    for (int i=0; i<=random(3, 9); i++) {
+        float freq = random(300, 4000);
+        // tone(_pinBuzzer, freq);          
+        // delay(random(70, 170));           
+        // noTone(_pinBuzzer);         
+        // delay(random(0, 30)); 
+        _tone(freq,random(70, 170),random(0, 30));
+    } 
+    noTone(_pinBuzzer); 
+    delay(2);
+}
+
+/**
+ * @brief 
+ * 
+ */
+void OttoSound::_r2d2Phrase1()
+{
+    uint16_t k = random(1000,2000);
+    
+    for (uint16_t i = 0; i <=  random(100,2000); i++) {
+        // tone(_pinBuzzer, k+(-i*2));          
+        // delay(random(.9,2));     
+        _tone(k+(-i*2),random(.9,2),0);
+    } 
+      
+    for (uint16_t i = 0; i <= random(100,1000); i++) {
+        // tone(_pinBuzzer, k + (i * 10));          
+        // delay(random(.9,2)); 
+        _tone(k+(i*10),random(.9,2),0);            
+    } 
+}
+
+/**
+ * @brief 
+ * 
+ */
+void OttoSound::_r2d2Phrase2()
+{
+    uint16_t k = random(1000,2000);
+
+    for (uint16_t i = 0; i <= random(100,2000); i++) {
+        // tone(_pinBuzzer, k+(i*2));          
+        // delay(random(.9,2));
+        _tone(k+(i*2),random(.9,2),0);
+    } 
+  
+    for (uint16_t i = 0; i <= random(100,1000); i++) {
+        // tone(_pinBuzzer, k + (-i * 10));          
+        // delay(random(.9,2)); 
+        _tone(k+(-i*10),random(.9,2),0);
+    } 
 }

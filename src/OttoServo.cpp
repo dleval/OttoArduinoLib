@@ -23,20 +23,28 @@
 #include <EEPROM.h>
 #include "OttoServo.h"
 
+Oscillator _servo[_NBR_OF_SERVO];
+
 /**
  * @brief Construct a new Otto Servo:: Otto Servo object
  * 
- * @param ottoLeePinServo List of Servo control pins
+ * @param legLeft 
+ * @param legRight 
+ * @param footLeft 
+ * @param footRight 
+ * @param armLeft 
+ * @param armRight 
+ * @param head 
  */
-OttoServo::OttoServo(const ottoLeePinServo_TStruct *ottoLeePinServo)
+OttoServo::OttoServo(uint8_t legLeft, uint8_t legRight, uint8_t footLeft, uint8_t footRight, uint8_t armLeft, uint8_t armRight, uint8_t head)
 {
-    _pinServo[LEG_L] = ottoLeePinServo->legLeft;
-    _pinServo[LEG_R] = ottoLeePinServo->legRight;
-    _pinServo[FOOT_L] = ottoLeePinServo->footLeft;
-    _pinServo[FOOT_R] = ottoLeePinServo->footRight;
-    _pinServo[ARM_L] = ottoLeePinServo->armLeft;
-    _pinServo[ARM_R] = ottoLeePinServo->armRight;
-    _pinServo[HEAD] = ottoLeePinServo->head;
+    _pinServo[LEG_L] = legLeft;
+    _pinServo[LEG_R] = legRight;
+    _pinServo[FOOT_L] = footLeft;
+    _pinServo[FOOT_R] = footRight;
+    _pinServo[ARM_L] = armLeft;
+    _pinServo[ARM_R] = armRight;
+    _pinServo[HEAD] = head;
 }
 
 /**
@@ -54,7 +62,7 @@ OttoServo::~OttoServo()
  */
 void OttoServo::_attachServos()
 {
-    for(uint8_t i; i<_NBR_OF_SERVO; i++) _servo[i].attach(_pinServo[i]);
+    for(uint8_t i; i<_NBR_OF_SERVO; i++) _servo[i].attach((int)_pinServo[i]);
 }
 
 /**
@@ -78,8 +86,7 @@ void OttoServo::init(bool loadCalibration)
 
     if (loadCalibration) {
         for (uint8_t i = 0; i < 7; i++) {
-            int servo_trim = EEPROM.read(i);
-            if (servo_trim > 128) servo_trim -= 256;
+            int servo_trim = loadTrimsFromEEPROM(i);
             _servo[i].SetTrim(servo_trim);
         }
     }
@@ -106,17 +113,23 @@ void OttoServo::moveSingle(int position, uint8_t servoNumber)
 /**
  * @brief Servo calibration offset adjustment
  * 
- * @param ottoLeePinServo List of Servo calibration offset
+ * @param legLeft 
+ * @param legRight 
+ * @param footLeft 
+ * @param footRight 
+ * @param armLeft 
+ * @param armRight 
+ * @param head 
  */
-void OttoServo::setTrims(ottoLeePinServo_TStruct *ottoLeePinServo)
+void OttoServo::setTrims(int legLeftTrim, int legRightTrim, int footLeftTrim, int footRightTrim, int armLeftTrim, int armRightTrim, int headTrim)
 { 
-    _servo[LEG_L].SetTrim(ottoLeePinServo->legLeft);
-    _servo[LEG_R].SetTrim(ottoLeePinServo->legRight);
-    _servo[FOOT_L].SetTrim(ottoLeePinServo->footLeft);
-    _servo[FOOT_R].SetTrim(ottoLeePinServo->footRight);
-    _servo[ARM_L].SetTrim(ottoLeePinServo->armLeft);
-    _servo[ARM_R].SetTrim(ottoLeePinServo->armRight);
-    _servo[HEAD].SetTrim(ottoLeePinServo->head);
+    _servo[LEG_L].SetTrim(legLeftTrim);
+    _servo[LEG_R].SetTrim(legRightTrim);
+    _servo[FOOT_L].SetTrim(footLeftTrim);
+    _servo[FOOT_R].SetTrim(footRightTrim);
+    _servo[ARM_L].SetTrim(armLeftTrim);
+    _servo[ARM_R].SetTrim(armRightTrim);
+    _servo[HEAD].SetTrim(headTrim);
 }
 
 /**
@@ -128,6 +141,21 @@ void OttoServo::saveTrimsOnEEPROM()
     for (int i = 0; i < 4; i++){ 
         EEPROM.write(i, _servo[i].getTrim());
     } 
+}
+
+/**
+ * @brief 
+ * 
+ * @param servoNumber 
+ * @return int 
+ */
+int OttoServo::loadTrimsFromEEPROM(uint8_t servoNumber)
+{
+    int servoTrim = EEPROM.read(servoNumber);
+    if(servoTrim > 127) servoTrim = 127;
+    if(servoTrim < -127) servoTrim = -127;
+
+    return servoTrim;
 }
 
 /**

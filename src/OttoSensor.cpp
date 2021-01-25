@@ -40,6 +40,8 @@ void OttoSensor::init(uint8_t USTrigger, uint8_t USEcho)
 {
     //US sensor init with the pins:
     _us.init(USTrigger, USEcho);
+
+    randomSeed(analogRead(_pinNoiseSensor));
 }
 
 /**

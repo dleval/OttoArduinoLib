@@ -61,11 +61,14 @@ class OttoSound
 private:
     uint8_t _pinBuzzer;
     void _tone (float noteFrequency, uint32_t noteDuration, uint16_t silentDuration, uint8_t volume = 10);
+    void _r2d2Phrase1();
+    void _r2d2Phrase2();
 public:
     OttoSound(uint8_t pinBuzzer);
     ~OttoSound();
     void bendTones(float initFrequency, float finalFrequency, float prop, long noteDuration, int silentDuration);
     void sing(uint8_t songName);
+    void r2d2();
 };
 
 #endif //OTTOSOUND_h

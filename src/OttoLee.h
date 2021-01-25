@@ -47,7 +47,7 @@ class OttoLee : public OttoSound, public OttoServo, public OttoSensor
         
 
     public:
-        OttoLee(const ottoLeePinServo_TStruct *ottoLeePinServo, uint8_t pinBuzzer, uint8_t pinNoiseSensor);
+        OttoLee(uint8_t legLeft, uint8_t legRight, uint8_t footLeft, uint8_t footRight, uint8_t armLeft, uint8_t armRight, uint8_t head, uint8_t pinBuzzer, uint8_t pinNoiseSensor);
         //-- Otto initialization
         void init(bool loadCalibration, uint8_t USTrigger, uint8_t USEcho);
         //-- Predetermined Motion Functions

@@ -28,6 +28,8 @@
 
 /** Typedef *******************************************************************/
 
+#define _NBR_OF_SERVO 7
+
 typedef enum {
     LEG_L = 0, 
     LEG_R, 
@@ -35,20 +37,8 @@ typedef enum {
     FOOT_R, 
     ARM_L, 
     ARM_R, 
-    HEAD,
-    _NBR_OF_SERVO
+    HEAD  
 }ottoLeeServo_TEnum;
-
-typedef struct
-{
-    uint8_t legLeft;
-    uint8_t legRight; 
-    uint8_t footLeft; 
-    uint8_t footRight; 
-    uint8_t armLeft;
-    uint8_t armRight; 
-    uint8_t head;
-}ottoLeePinServo_TStruct;
 
 /** Macro *********************************************************************/
 
@@ -68,7 +58,7 @@ typedef struct
 class OttoServo
 {
 private:
-    Oscillator _servo[_NBR_OF_SERVO];
+    // Oscillator _servo[_NBR_OF_SERVO];
     uint8_t _pinServo[_NBR_OF_SERVO];
     uint8_t _servo_position[_NBR_OF_SERVO];
     //-- Attach & detach functions
@@ -82,11 +72,12 @@ protected:
 
 public:
     // OttoServo(ottoLeePinServo_TStruct *ottoLeePinServo);
-    OttoServo(const ottoLeePinServo_TStruct *ottoLeePinServo);
+    OttoServo(uint8_t legLeft, uint8_t legRight, uint8_t footLeft, uint8_t footRight, uint8_t armLeft, uint8_t armRight, uint8_t head);
     ~OttoServo();
     void init(bool loadCalibration);
     //-- Oscillator Trims
-    void setTrims(ottoLeePinServo_TStruct *ottoLeePinServo);
+    void setTrims(int legLeftTrim, int legRightTrim, int footLeftTrim, int footRightTrim, int armLeftTrim, int armRightTrim, int headTrim);
+    int loadTrimsFromEEPROM(uint8_t servoNumber);
     void saveTrimsOnEEPROM();
     //-- Predetermined Motion Functions
     void moveSingle(int position, uint8_t servo_number);

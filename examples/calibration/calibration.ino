@@ -21,7 +21,7 @@
  */
 
 #include <Arduino.h>
-#include "OttoLee.h"
+#include <OttoLee.h>
 
 // Pinout configuration ------------------------------------------------
 #define PIN_LEG_L         2   // Left leg servo
@@ -36,33 +36,33 @@
 #define PIN_NoiseSensor   A6
 #define PIN_Buzzer        13  // Buzzer
 
-// Pinout configuration ------------------------------------------------
 // Global variables ----------------------------------------------------
-int positions[_NBR_OF_SERVO] = {90, 90, 90, 90, 90, 90, 90};
-int trims[_NBR_OF_SERVO] = {0, 0, 0, 0, 0, 0, 0};
+uint8_t positions[_NBR_OF_SERVO] = {90, 90, 90, 90, 90, 90, 90};
+int8_t trims[_NBR_OF_SERVO] = {0, 0, 0, 0, 0, 0, 0};
 uint8_t servoSelection;
 
 // Otto driver object --------------------------------------------------
-OttoLee otto(PIN_LEG_L, PIN_LEG_R, PIN_FOOT_L, PIN_FOOT_R, PIN_ARM_L, PIN_ARM_R, PIN_HEAD , PIN_Buzzer, PIN_NoiseSensor);
+OttoLee otto(PIN_LEG_L, PIN_LEG_R, PIN_FOOT_L, PIN_FOOT_R, PIN_ARM_L, PIN_ARM_R, PIN_HEAD, PIN_NoiseSensor, PIN_Buzzer, PIN_Trigger, PIN_Echo);
 
 // Function prototypes -------------------------------------------------
 void helpMenu(void);
 void displayTrimsValues(void);
 void processUserCalibration(char c);
 void displayServoSelection(uint8_t selection);
+void displayServoTrimSelected(uint8_t selection);
 void setTrimsCalibration(void);
 
 // Setup Function ------------------------------------------------------
 void setup() {
   Serial.begin(115200);
 
-  otto.init(1, PIN_Trigger, PIN_Echo);
+  otto.init(true);
   otto.home();
 
   helpMenu();
 
   //Read all Trims values from EEPROM
-  for(uint8_t i=0; i<_NBR_OF_SERVO; i++) trims[i] = otto.loadTrimsFromEEPROM[i];
+  for(uint8_t i=0; i<_NBR_OF_SERVO; i++) trims[i] = otto.loadTrimsFromEEPROM(i);
   //Then apply Trims
   setTrimsCalibration();
   //Display Trims
@@ -149,7 +149,7 @@ void processUserCalibration(char c)
     case 'r':
     case 'R':
       Serial.println("");
-      for(uint8_t i=0; i<_NBR_OF_SERVO; i++) trims[i] = otto.loadTrimsFromEEPROM[i];
+      for(uint8_t i=0; i<_NBR_OF_SERVO; i++) trims[i] = otto.loadTrimsFromEEPROM(i);
       Serial.print(F("Load from EEPROM "));
       setTrimsCalibration();
       displayTrimsValues();
@@ -192,13 +192,13 @@ void displayServoTrimSelected(uint8_t selection)
 
   Serial.print("\r");
 
-  if(servoSelection = 0) Serial.print(F("Selected Left Leg"));
-  if(servoSelection = 1) Serial.print(F("Selected Right Leg"));
-  if(servoSelection = 2) Serial.print(F("Selected Left Foot"));
-  if(servoSelection = 3) Serial.print(F("Selected Left Foot"));
-  if(servoSelection = 4) Serial.print(F("Selected Left Arm"));
-  if(servoSelection = 5) Serial.print(F("Selected Right Arm"));
-  if(servoSelection = 6) Serial.print(F("Selected Head"));
+  if(servoSelection == 0) Serial.print(F("Selected Left Leg"));
+  if(servoSelection == 1) Serial.print(F("Selected Right Leg"));
+  if(servoSelection == 2) Serial.print(F("Selected Left Foot"));
+  if(servoSelection == 3) Serial.print(F("Selected Left Foot"));
+  if(servoSelection == 4) Serial.print(F("Selected Left Arm"));
+  if(servoSelection == 5) Serial.print(F("Selected Right Arm"));
+  if(servoSelection == 6) Serial.print(F("Selected Head"));
 
   Serial.print(F(" -> Trims = "));
   Serial.print(trims[servoSelection]);

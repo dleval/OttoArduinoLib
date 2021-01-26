@@ -3,7 +3,7 @@
  * @author your name (you@domain.com)
  * @brief 
  * @version 1.0
- * @date 2021-01-21
+ * @date 2021-01-26
  * 
  * @copyright Copyright (c) 2021
  * 
@@ -24,8 +24,8 @@
 #define OTTOLEE_h
 
 #include "OttoSound.h"
-#include "OttoServo.h"
 #include "OttoSensor.h"
+#include "OttoServo.h"
 
 //-- Constants
 #define FORWARD     1
@@ -36,38 +36,36 @@
 #define MEDIUM      15
 #define BIG         30
 
-
 /**
- * @brief 
+ * @brief Otto Lee Driver
  * 
  */
-class OttoLee : public OttoSound, public OttoServo, public OttoSensor
+class OttoLee: public OttoSound, public OttoSensor, public OttoServo
 {
     private:
         
-
     public:
-        OttoLee(uint8_t legLeft, uint8_t legRight, uint8_t footLeft, uint8_t footRight, uint8_t armLeft, uint8_t armRight, uint8_t head, uint8_t pinBuzzer, uint8_t pinNoiseSensor);
+        OttoLee(uint8_t legLeft, uint8_t legRight, uint8_t footLeft, uint8_t footRight, uint8_t armLeft, uint8_t armRight, uint8_t head, uint8_t pinNoiseSensor, uint8_t pinBuzzer, uint8_t pinUSTrigger, uint8_t pinUSEcho);
         //-- Otto initialization
-        void init(bool loadCalibration, uint8_t USTrigger, uint8_t USEcho);
-        //-- Predetermined Motion Functions
-        void jump(float steps=1, int T = 2000);
-        void walk(float steps=4, int T=1000, int dir = FORWARD, int armOsc=0, int headOsc=0);
-        void turn(float steps=4, int T=2000, int dir = LEFT, int armOsc=0, int headOsc=0);
-        void bend(int steps=1, int T=1400, int dir=LEFT);
-        void shakeLeg(int steps=1, int T = 3000, int dir=RIGHT);
-        void updown(float steps=1, int T=1000, int h = 20);
-        void handsup();
-        void handwave(int dir =RIGHT);
-        void swing(float steps=1, int T=1000, int h=20);
-        void tiptoeSwing(float steps=1, int T=900, int h=20);
-        void jitter(float steps=1, int T=500, int h=20);
-        void ascendingTurn(float steps=1, int T=900, int h=20);
-        void moonwalker(float steps=1, int T=900, int h=20, int dir=LEFT);
-        void crusaito(float steps=1, int T=900, int h=20, int dir=FORWARD);
-        void flapping(float steps=1, int T=1000, int h=20, int dir=FORWARD);
-        void headNo(float steps=1, int T=1000);
+        void init(bool load_calibration);
         
+        //-- Predetermined Motion Functions
+        void jump(float steps=1, uint16_t T = 2000);
+        void walk(float steps=4, uint16_t T=1000, int8_t dir = FORWARD, uint16_t armOsc=0, uint16_t headOsc=0);
+        void turn(float steps=4, uint16_t T=2000, int8_t dir = LEFT, uint16_t armOsc=0, uint16_t headOsc=0);
+        void bend(uint16_t steps, uint16_t T, int8_t dir=LEFT);
+        void shakeLeg(uint16_t steps=1, uint16_t T = 3000, int8_t dir=RIGHT);
+        void updown(float steps=1, uint16_t T=1000, uint16_t h = 20);
+        void handsup();
+        void handwave(int8_t dir =RIGHT);
+        void swing(float steps=1, uint16_t T=1000, uint16_t h=20);
+        void tiptoeSwing(float steps=1, uint16_t T=900, uint16_t h=20);
+        void jitter(float steps=1, uint16_t T=500, uint16_t h=20);
+        void ascendingTurn(float steps=1, uint16_t T=900, uint16_t h=20);
+        void moonwalker(float steps=1, uint16_t T=900, uint16_t h=20, int dir=LEFT);
+        void crusaito(float steps=1, uint16_t T=900, uint16_t h=20, int dir=FORWARD);
+        void flapping(float steps=1, uint16_t T=1000, uint16_t h=20, int dir=FORWARD);
+        void headNo(float steps=1, uint16_t T=1000);
 };
 
 

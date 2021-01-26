@@ -78,7 +78,7 @@ void Oscillator::detach()
 /*************************************/
 /* Set the oscillator period, in ms  */
 /*************************************/
-void Oscillator::SetT(unsigned int T)
+void Oscillator::SetT(uint16_t T)
 {
   //-- Assign the new period
   _T=T;
@@ -92,7 +92,7 @@ void Oscillator::SetT(unsigned int T)
 /* Manual set of the position  */
 /******************************/
 
-void Oscillator::SetPosition(int position)
+void Oscillator::SetPosition(uint8_t position)
 {
   _servo.write(position+_trim);
 };
@@ -121,6 +121,5 @@ void Oscillator::refresh()
       //-- It is always increased, even when the oscillator is stop
       //-- so that the coordination is always kept
       _phase = _phase + _inc;
-
   }
 }

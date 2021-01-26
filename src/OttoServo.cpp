@@ -2,7 +2,7 @@
  * @file OttoServo.cpp
  * @author David LEVAL (dleval@dle-dev.com)
  * @version 1.0
- * @date 2021-01-22
+ * @date 2021-01-26
  * 
  * @copyright Copyright (c) 2021
  * 
@@ -23,28 +23,26 @@
 #include <EEPROM.h>
 #include "OttoServo.h"
 
-Oscillator _servo[_NBR_OF_SERVO];
-
 /**
  * @brief Construct a new Otto Servo:: Otto Servo object
  * 
- * @param legLeft 
- * @param legRight 
- * @param footLeft 
- * @param footRight 
- * @param armLeft 
- * @param armRight 
- * @param head 
+ * @param legLeft   Left leg pin Servo
+ * @param legRight  Right leg pin Servo
+ * @param footLeft  Left foot pin Servo
+ * @param footRight Right foot pin Servo
+ * @param armLeft   Left arm pin Servo
+ * @param armRight  Right arm pin Servo
+ * @param head      Head pin Servo
  */
 OttoServo::OttoServo(uint8_t legLeft, uint8_t legRight, uint8_t footLeft, uint8_t footRight, uint8_t armLeft, uint8_t armRight, uint8_t head)
 {
-    _pinServo[LEG_L] = legLeft;
-    _pinServo[LEG_R] = legRight;
-    _pinServo[FOOT_L] = footLeft;
-    _pinServo[FOOT_R] = footRight;
-    _pinServo[ARM_L] = armLeft;
-    _pinServo[ARM_R] = armRight;
-    _pinServo[HEAD] = head;
+    _servo_pins[0] = legLeft;
+    _servo_pins[1] = legRight;
+    _servo_pins[2] = footLeft;
+    _servo_pins[3] = footRight;
+    _servo_pins[4] = armLeft;
+    _servo_pins[5] = armRight;
+    _servo_pins[6] = head;
 }
 
 /**
@@ -55,90 +53,87 @@ OttoServo::~OttoServo()
 {
 }
 
-
-/**
- * @brief Attach all oscillator to all servo
- * 
- */
-void OttoServo::_attachServos()
-{
-    for(uint8_t i; i<_NBR_OF_SERVO; i++) _servo[i].attach((int)_pinServo[i]);
-}
-
-/**
- * @brief Detach all oscillator to all servo
- * 
- */
-void OttoServo::_detachServos()
-{
-    for(uint8_t i; i<_NBR_OF_SERVO; i++) _servo[i].detach();
-}
-
 /**
  * @brief Initialization of the Servo control system
  * 
- * @param loadCalibration Activates the recovery of calibrations in EEPROM
+ * @param load_calibration Activates the recovery of calibrations in EEPROM
  */
-void OttoServo::init(bool loadCalibration)
+void OttoServo::init(bool load_calibration)
 {
-    _attachServos();
-    isOttoResting=false;
+    attachServos();
+    _isOttoResting=false;
 
-    if (loadCalibration) {
-        for (uint8_t i = 0; i < 7; i++) {
-            int servo_trim = loadTrimsFromEEPROM(i);
+    if (load_calibration) {
+        for (uint8_t i=0; i<_NBR_OF_SERVO; i++) {
+            int8_t servo_trim = loadTrimsFromEEPROM(i);
             _servo[i].SetTrim(servo_trim);
         }
     }
 
-    for (int i = 0; i < 7; i++) _servo_position[i] = 90;
+    for (int i = 0; i < _NBR_OF_SERVO; i++) _servo_position[i] = 90; 
 }
 
+/** Attach & Detach Servo(s) **************************************************/
+
 /**
- * @brief Adjusting a Servo Position 
+ * @brief 
  * 
- * @param position      Angle degree (0 to 180)
- * @param servoNumber   Servo Identification
  */
-void OttoServo::moveSingle(int position, uint8_t servoNumber) 
+void OttoServo::attachServos()
 {
-    if (position > 180) position = 90;
-    if (position < 0) position = 90;
-    _attachServos();
-    if(isOttoResting) isOttoResting = false;
-
-    _servo[servoNumber].SetPosition(position);
+    // Serial.print("Attach Servo : ");
+    for (uint8_t i = 0; i < _NBR_OF_SERVO; i++) {
+        _servo[i].attach(_servo_pins[i]);
+        // Serial.print(_servo_pins[i]);
+    }
+    // Serial.println("");
 }
 
 /**
- * @brief Servo calibration offset adjustment
+ * @brief 
  * 
- * @param legLeft 
- * @param legRight 
- * @param footLeft 
- * @param footRight 
- * @param armLeft 
- * @param armRight 
- * @param head 
  */
-void OttoServo::setTrims(int legLeftTrim, int legRightTrim, int footLeftTrim, int footRightTrim, int armLeftTrim, int armRightTrim, int headTrim)
-{ 
-    _servo[LEG_L].SetTrim(legLeftTrim);
-    _servo[LEG_R].SetTrim(legRightTrim);
-    _servo[FOOT_L].SetTrim(footLeftTrim);
-    _servo[FOOT_R].SetTrim(footRightTrim);
-    _servo[ARM_L].SetTrim(armLeftTrim);
-    _servo[ARM_R].SetTrim(armRightTrim);
-    _servo[HEAD].SetTrim(headTrim);
+void OttoServo::detachServos()
+{
+    // Serial.print("Detach Servo : ");
+    for (uint8_t i = 0; i < _NBR_OF_SERVO; i++) {
+        _servo[i].detach();
+        // Serial.print(_servo_pins[i]);
+    }
+    // Serial.println("");
+}
+
+/** Trims Servo(s) & EEPROM ***************************************************/
+
+/**
+ * @brief 
+ * 
+ * @param legLeftTrim 
+ * @param legRightTrim 
+ * @param footLeftTrim 
+ * @param footRightTrim 
+ * @param armLeftTrim 
+ * @param armRightTrim 
+ * @param headTrim 
+ */
+void OttoServo::setTrims(int8_t legLeftTrim, int8_t legRightTrim, int8_t footLeftTrim, int8_t footRightTrim, int8_t armLeftTrim, int8_t armRightTrim, int8_t headTrim)
+{
+    _servo[0].SetTrim(legLeftTrim);
+    _servo[1].SetTrim(legRightTrim);
+    _servo[2].SetTrim(footLeftTrim);
+    _servo[3].SetTrim(footRightTrim);
+    _servo[4].SetTrim(armLeftTrim);
+    _servo[5].SetTrim(armRightTrim);
+    _servo[6].SetTrim(headTrim);
 }
 
 /**
- * @brief Save calibration offsets in EEPROM
+ * @brief 
  * 
  */
 void OttoServo::saveTrimsOnEEPROM() 
 {
-    for (int i = 0; i < 4; i++){ 
+    for (int i = 0; i < _NBR_OF_SERVO; i++){ 
         EEPROM.write(i, _servo[i].getTrim());
     } 
 }
@@ -149,13 +144,86 @@ void OttoServo::saveTrimsOnEEPROM()
  * @param servoNumber 
  * @return int 
  */
-int OttoServo::loadTrimsFromEEPROM(uint8_t servoNumber)
+int8_t OttoServo::loadTrimsFromEEPROM(uint8_t servoNumber)
 {
     int servoTrim = EEPROM.read(servoNumber);
     if(servoTrim > 127) servoTrim = 127;
     if(servoTrim < -127) servoTrim = -127;
 
     return servoTrim;
+}
+
+/** Basic motion functions ****************************************************/
+
+/**
+ * @brief 
+ * 
+ * @param time 
+ * @param servo_target 
+ */
+void OttoServo::moveServos(uint32_t time, uint8_t  servo_target[]) 
+{
+    attachServos();
+    if(_isOttoResting == true){
+        _isOttoResting = false;
+    }
+
+    if(time>10){
+        for (int i = 0; i < _NBR_OF_SERVO; i++) _increment[i] = ((servo_target[i]) - _servo_position[i]) / (time / 10.0);
+        _final_time =  millis() + time;
+
+        for (int iteration = 1; millis() < _final_time; iteration++) {
+        _partial_time = millis() + 10;
+        for (int i = 0; i < _NBR_OF_SERVO; i++) _servo[i].SetPosition(_servo_position[i] + (iteration * _increment[i]));
+        while (millis() < _partial_time); //pause
+        }
+    }
+    else{
+        for (int i = 0; i < _NBR_OF_SERVO; i++) _servo[i].SetPosition(servo_target[i]);
+    }
+    for (int i = 0; i < _NBR_OF_SERVO; i++) _servo_position[i] = servo_target[i];
+}
+
+/**
+ * @brief 
+ * 
+ * @param position 
+ * @param servo_number 
+ */
+void OttoServo::moveSingle(uint8_t position, uint8_t servo_number) 
+{
+    if (position > 180) position = 90;
+    if (position < 0) position = 90;
+    attachServos();
+    if(_isOttoResting == true) _isOttoResting = false;
+    if(servo_number >= _NBR_OF_SERVO) return;
+    _servo[servo_number].SetPosition(position);
+}
+
+/**
+ * @brief 
+ * 
+ * @param A 
+ * @param O 
+ * @param T 
+ * @param phase_diff 
+ * @param cycle 
+ */
+void OttoServo::oscillateServos(uint16_t A[_NBR_OF_SERVO], uint16_t O[_NBR_OF_SERVO], uint16_t T, double phase_diff[_NBR_OF_SERVO], float cycle)
+{
+
+  for (int i=0; i<_NBR_OF_SERVO; i++) {
+    _servo[i].SetO(O[i]);
+    _servo[i].SetA(A[i]);
+    _servo[i].SetT(T);
+    _servo[i].SetPh(phase_diff[i]);
+  }
+  double ref=millis();
+   for (double x=ref; x<=T*cycle+ref; x=millis()) {
+     for (int i=0; i<_NBR_OF_SERVO; i++){
+        _servo[i].refresh();
+     }
+  }
 }
 
 /**
@@ -167,10 +235,10 @@ int OttoServo::loadTrimsFromEEPROM(uint8_t servoNumber)
  * @param phase_diff 
  * @param steps 
  */
-void OttoServo::execute(int A[_NBR_OF_SERVO], int O[_NBR_OF_SERVO], int T, double phase_diff[_NBR_OF_SERVO], float steps)
+void OttoServo::execute(uint16_t A[_NBR_OF_SERVO], uint16_t O[_NBR_OF_SERVO], uint16_t T, double phase_diff[_NBR_OF_SERVO], float steps = 1.0)
 {
-    _attachServos();
-    if(isOttoResting) isOttoResting = false;
+    attachServos();
+    if(_isOttoResting == true) _isOttoResting = false;
 
     int cycles=(int)steps;    
 
@@ -185,77 +253,18 @@ void OttoServo::execute(int A[_NBR_OF_SERVO], int O[_NBR_OF_SERVO], int T, doubl
     oscillateServos(A,O, T, phase_diff,(float)steps-cycles);
 }
 
-/**
- * @brief 
- * 
- * @param time 
- * @param servo_target 
- */
-void OttoServo::moveServos(uint32_t time, int  servo_target[]) 
+/** Home position *************************************************************/
+
+void OttoServo::home(uint32_t time)
 {
-    float _increment[7];
-    uint32_t _final_time;
-    uint32_t _partial_time;
+    uint8_t homes[_NBR_OF_SERVO];
 
-    _attachServos();
-    if(isOttoResting) isOttoResting = false;
+    if(_isOttoResting == false) { //Go to rest position only if necessary
+        for(uint8_t i=0; i<_NBR_OF_SERVO; i++) homes[i] = 90; //All the servos at rest position
+        moveServos(time,homes); 
 
-    if(time>10){
-        for (int i = 0; i < 7; i++) _increment[i] = ((servo_target[i]) - _servo_position[i]) / (time / 10.0);
-        _final_time =  millis() + time;
-
-        for (int iteration = 1; millis() < _final_time; iteration++) {
-        _partial_time = millis() + 10;
-        for (int i = 0; i < 7; i++) _servo[i].SetPosition(_servo_position[i] + (iteration * _increment[i]));
-        while (millis() < _partial_time); //pause
-        }
-    }
-    else{
-        for (int i = 0; i < 7; i++) _servo[i].SetPosition(servo_target[i]);
-    }
-    for (int i = 0; i < 7; i++) _servo_position[i] = servo_target[i];
-}
-
-/**
- * @brief 
- * 
- * @param A 
- * @param O 
- * @param T 
- * @param phase_diff 
- * @param cycle 
- */
-void OttoServo::oscillateServos(int A[_NBR_OF_SERVO], int O[_NBR_OF_SERVO], int T, double phase_diff[_NBR_OF_SERVO], float cycle)
-{
-
-  for (uint8_t i=0; i<_NBR_OF_SERVO; i++) {
-    _servo[i].SetO(O[i]);
-    _servo[i].SetA(A[i]);
-    _servo[i].SetT(T);
-    _servo[i].SetPh(phase_diff[i]);
-  }
-  double ref = (double)millis();
-   for (double x=ref; x<=T*cycle+ref; x=millis()){
-     for (uint8_t i=0; i<_NBR_OF_SERVO; i++){
-        _servo[i].refresh();
-     }
-  }
-}
-
-/**
- * @brief Set all servos in home position
- * 
- * @param duration Duration of return to home position
- */
-void OttoServo::home(uint32_t duration)
-{
-    if(duration == 0) duration = 500;
-
-    if(isOttoResting == false) { //Check if all servo are already in home position
-        int homes[7] = {90, 90, 90, 90, 90, 90, 90}; //All the servos at rest position
-        moveServos(duration,homes);   //Move the servos
-        _detachServos();
-        isOttoResting = true;
+        detachServos();
+        _isOttoResting = true;
     }
 }
 

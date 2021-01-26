@@ -77,7 +77,7 @@ void OttoLee::jump(float steps, uint16_t T)
  * @param T Period
  * @param dir Direction: FORWARD / BACKWARD
  */
-void OttoLee::walk(float steps, uint16_t T, int8_t dir, uint16_t armOsc, uint16_t headOsc)
+void OttoLee::walk(float steps, uint16_t T, int8_t dir, int16_t armOsc, int16_t headOsc)
 {
     //-- Oscillator parameters for walking
     //-- Hip sevos are in phase
@@ -87,8 +87,8 @@ void OttoLee::walk(float steps, uint16_t T, int8_t dir, uint16_t armOsc, uint16_
     //--       90 : Walk backward
     //-- Feet servos also have the same offset (for tiptoe a little bit)
 
-    uint16_t A[7]= {30, 30, 20, 20, armOsc, armOsc, headOsc};
-    uint16_t O[7] = {0, 0, 4, 4, 0 ,0 , 0};
+    int16_t A[7]= {30, 30, 20, 20, armOsc, armOsc, headOsc};
+    int16_t O[7] = {0, 0, 4, -4, 0 ,0 , 0};
     double phase_diff[7] = {0, 0, DEG2RAD(dir * -90), DEG2RAD(dir * -90), 0, 0, 0};
 
     //-- Let's oscillate the servos!
@@ -102,15 +102,15 @@ void OttoLee::walk(float steps, uint16_t T, int8_t dir, uint16_t armOsc, uint16_
  * @param T     Period
  * @param dir   Direction: LEFT / RIGHT
  */
-void OttoLee::turn(float steps, uint16_t T, int8_t dir, uint16_t armOsc, uint16_t headOsc)
+void OttoLee::turn(float steps, uint16_t T, int8_t dir, int16_t armOsc, int16_t headOsc)
 {
     //-- Same coordination than for walking (see Otto::walk)
     //-- The Amplitudes of the hip's oscillators are not igual
     //-- When the right hip servo amplitude is higher, the steps taken by
     //--   the right leg are bigger than the left. So, the robot describes an 
     //--   left arc
-    uint16_t A[7]= {30, 30, 20, 20, armOsc, armOsc, headOsc};
-    uint16_t O[7] = {0, 0, 4, 4, 0, 0, 0};
+    int16_t A[7]= {30, 30, 20, 20, armOsc, armOsc, headOsc};
+    int16_t O[7] = {0, 0, 4, -4, 0, 0, 0};
     double phase_diff[7] = {0, 0, DEG2RAD(-90), DEG2RAD(-90), 0, 0, 0}; 
         
     if (dir == LEFT) {  
@@ -221,14 +221,14 @@ void OttoLee::shakeLeg(uint16_t steps, uint16_t T, int8_t dir)
  * @param T     Period
  * @param h     Jump height: SMALL / MEDIUM / BIG (or a number in degrees 0 - 90)
  */
-void OttoLee::updown(float steps, uint16_t T, uint16_t h)
+void OttoLee::updown(float steps, uint16_t T, int16_t h)
 {
     //-- Both feet are 180 degrees out of phase
     //-- Feet amplitude and offset are the same
     //-- Initial phase for the right foot is -90, so that it starts
     //--   in one extreme position (not in the middle)
-    uint16_t A[7]= {0, 0, h, h, h, h, 0};
-    uint16_t O[7] = {0, 0, h, -h, h, -h, 0};
+    int16_t A[7]= {0, 0, h, h, h, h, 0};
+    int16_t O[7] = {0, 0, h, -h, h, -h, 0};
     double phase_diff[7] = {0, 0, DEG2RAD(-90), DEG2RAD(90),DEG2RAD(-90), DEG2RAD(90) , 0};
     
     //-- Let's oscillate the servos!
@@ -253,15 +253,15 @@ void OttoLee::handsup()
 void OttoLee::handwave(int8_t dir)
 {
     if(dir==-1) {
-        uint16_t A[7]= {0, 0, 0, 0, 30, 0, 0}; // left hand wave
-        uint16_t O[7] = {0, 0, 0, 0, 30, 40, 0};
+        int16_t A[7]= {0, 0, 0, 0, 30, 0, 0}; // left hand wave
+        int16_t O[7] = {0, 0, 0, 0, -30, -40, 0};
         double phase_diff[7] = {0, 0, 0, 0, DEG2RAD(0), 0, 0};
             //-- Let's oscillate the servos!
         execute(A, O, 500, phase_diff, 5); 
     }
     if(dir==1) {
-        uint16_t A[7]= {0, 0, 0, 0, 0, 30, 0}; // right hand wave
-        uint16_t O[7] = {0, 0, 0, 0, 40, 60, 0};
+        int16_t A[7]= {0, 0, 0, 0, 0, 30, 0}; // right hand wave
+        int16_t O[7] = {0, 0, 0, 0, 40, 60, 0};
         double phase_diff[7] = {0, 0, 0, 0, 0, DEG2RAD(0), 0};
             //-- Let's oscillate the servos!
         execute(A, O, 500, phase_diff, 1); 
@@ -275,12 +275,12 @@ void OttoLee::handwave(int8_t dir)
  * @param T     Period
  * @param h     Amount of swing (from 0 to 50 aprox)
  */
-void OttoLee::swing(float steps, uint16_t T, uint16_t h)
+void OttoLee::swing(float steps, uint16_t T, int16_t h)
 {
     //-- Both feets are in phase. The offset is half the amplitude
     //-- It causes the robot to swing from side to side
-    uint16_t A[7]= {0, 0, h, h, h, h, 0};
-    uint16_t O[7] = {0, 0, h/2, -h/2, h, -h, 0};
+    int16_t A[7]= {0, 0, h, h, h, h, 0};
+    int16_t O[7] = {0, 0, h/2, -h/2, h, -h, 0};
     double phase_diff[7] = {0, 0, DEG2RAD(0), DEG2RAD(0), DEG2RAD(0), DEG2RAD(0), 0};
     
     //-- Let's oscillate the servos!
@@ -294,12 +294,12 @@ void OttoLee::swing(float steps, uint16_t T, uint16_t h)
  * @param T     Period
  * @param h     Amount of swing (from 0 to 50 aprox)
  */
-void OttoLee::tiptoeSwing(float steps, uint16_t T, uint16_t h){
+void OttoLee::tiptoeSwing(float steps, uint16_t T, int16_t h){
 
     //-- Both feets are in phase. The offset is not half the amplitude in order to tiptoe
     //-- It causes the robot to swing from side to side
-    uint16_t A[7]= {0, 0, h, h, h, h, 0};
-    uint16_t O[7] = {0, 0, h, -h, h, -h, 0};
+    int16_t A[7]= {0, 0, h, h, h, h, 0};
+    int16_t O[7] = {0, 0, h, -h, h, -h, 0};
     double phase_diff[7] = {0, 0, 0, 0, 0, 0, 0};
     
     //-- Let's oscillate the servos!
@@ -313,7 +313,7 @@ void OttoLee::tiptoeSwing(float steps, uint16_t T, uint16_t h){
  * @param T     Period of one jitter
  * @param h     height (Values between 5 - 25) 
  */
-void OttoLee::jitter(float steps, uint16_t T, uint16_t h)
+void OttoLee::jitter(float steps, uint16_t T, int16_t h)
 {
     //-- Both feet are 180 degrees out of phase
     //-- Feet amplitude and offset are the same
@@ -321,8 +321,8 @@ void OttoLee::jitter(float steps, uint16_t T, uint16_t h)
     //--   in one extreme position (not in the middle)
     //-- h is constrained to avoid hit the feets
     h = min(25,h);
-    uint16_t A[7]= {h, h, 0, 0, 0, 0, 0};
-    uint16_t O[7] = {0, 0, 0, 0, 0, 0, 0};
+    int16_t A[7]= {h, h, 0, 0, 0, 0, 0};
+    int16_t O[7] = {0, 0, 0, 0, 0, 0, 0};
     double phase_diff[7] = {DEG2RAD(-90), DEG2RAD(90), 0, 0, 0, 0, 0};
     
     //-- Let's oscillate the servos!
@@ -336,15 +336,15 @@ void OttoLee::jitter(float steps, uint16_t T, uint16_t h)
  * @param T     Period of one bend
  * @param h     height (Values between 5 - 15)
  */
-void OttoLee::ascendingTurn(float steps, uint16_t T, uint16_t h)
+void OttoLee::ascendingTurn(float steps, uint16_t T, int16_t h)
 {
     //-- Both feet and legs are 180 degrees out of phase
     //-- Initial phase for the right foot is -90, so that it starts
     //--   in one extreme position (not in the middle)
     //-- h is constrained to avoid hit the feets
     h = min(13,h);
-    uint16_t A[7] = {h, h, h, h, 40, 40, 0};
-    uint16_t O[7] = {0, 0, h+4, -h+4,0,0, 0};
+    int16_t A[7] = {h, h, h, h, 40, 40, 0};
+    int16_t O[7] = {0, 0, h+4, -h+4,0,0, 0};
     double phase_diff[7] = {DEG2RAD(-90), DEG2RAD(90), DEG2RAD(-90), DEG2RAD(90), 0, 0, 0};
     
     //-- Let's oscillate the servos!
@@ -359,7 +359,7 @@ void OttoLee::ascendingTurn(float steps, uint16_t T, uint16_t h)
  * @param h     Height. Typical valures between 15 and 40
  * @param dir   Direction: LEFT or RIGHT
  */
-void OttoLee::moonwalker(float steps, uint16_t T, uint16_t h, int dir)
+void OttoLee::moonwalker(float steps, uint16_t T, int16_t h, int dir)
 {
     //-- This motion is similar to that of the caterpillar robots: A travelling
     //-- wave moving from one side to another
@@ -371,8 +371,8 @@ void OttoLee::moonwalker(float steps, uint16_t T, uint16_t h, int dir)
     //--  Both amplitudes are equal. The offset is half the amplitud plus a little bit of
     //-   offset so that the robot tiptoe lightly
     
-    uint16_t A[7] = {0, 0, h, h, h, h, 0};
-    uint16_t O[7] = {0, 0, h/2+2, -h/2 -2, -h, h, 0};
+    int16_t A[7] = {0, 0, h, h, h, h, 0};
+    int16_t O[7] = {0, 0, h/2+2, -h/2 -2, -h, h, 0};
     int phi = -dir * 90;
     double phase_diff[7] = {0, 0, DEG2RAD(phi), DEG2RAD(-60 * dir + phi), DEG2RAD(phi), DEG2RAD(phi), 0};
     
@@ -388,10 +388,10 @@ void OttoLee::moonwalker(float steps, uint16_t T, uint16_t h, int dir)
  * @param h     height (Values between 20 - 50)
  * @param dir   Direction: LEFT or RIGHT
  */
-void OttoLee::crusaito(float steps, uint16_t T, uint16_t h, int dir)
+void OttoLee::crusaito(float steps, uint16_t T, int16_t h, int dir)
 {
-    uint16_t A[7]= {25, 25, h, h, 0, 0, 0};
-    uint16_t O[7] = {0, 0, h/2+ 4, -h/2 - 4, 0, 0, 0};
+    int16_t A[7]= {25, 25, h, h, 0, 0, 0};
+    int16_t O[7] = {0, 0, h/2+ 4, -h/2 - 4, 0, 0, 0};
     double phase_diff[7] = {90, 90, DEG2RAD(0), DEG2RAD(-60 * dir), 0, 0, 0};
     
     //-- Let's oscillate the servos!
@@ -406,10 +406,10 @@ void OttoLee::crusaito(float steps, uint16_t T, uint16_t h, int dir)
  * @param h     height (Values between 10 - 30)
  * @param dir   direction: FOREWARD, BACKWARD
  */
-void OttoLee::flapping(float steps, uint16_t T, uint16_t h, int dir)
+void OttoLee::flapping(float steps, uint16_t T, int16_t h, int dir)
 {
-    uint16_t A[7]= {12, 12, h, h, 0, 0, 0};
-    uint16_t O[7] = {0, 0, h - 10, -h + 10, 0, 0, 0};
+    int16_t A[7]= {12, 12, h, h, 0, 0, 0};
+    int16_t O[7] = {0, 0, h - 10, -h + 10, 0, 0, 0};
     double phase_diff[7] = {DEG2RAD(0), DEG2RAD(180), DEG2RAD(-90 * dir), DEG2RAD(90 * dir), 0, 0, 0};
     
     //-- Let's oscillate the servos!
@@ -424,8 +424,8 @@ void OttoLee::flapping(float steps, uint16_t T, uint16_t h, int dir)
  */
 void OttoLee::headNo(float steps, uint16_t T)
 {
-    uint16_t A[7]= {0, 0, 0, 0, 0, 0, 30}; // right hand wave
-    uint16_t O[7] = {0, 0, 0, 0, 0, 0, 0};
+    int16_t A[7]= {0, 0, 0, 0, 0, 0, 30}; // right hand wave
+    int16_t O[7] = {0, 0, 0, 0, 0, 0, 0};
     double phase_diff[7] = {0, 0, 0, 0, 0, 0, DEG2RAD(0)};
     //-- Let's oscillate the servos!
     execute(A, O, T, phase_diff, steps); 

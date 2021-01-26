@@ -47,7 +47,7 @@ class OttoServo
 
     protected:
         //-- Predetermined Motion Functions
-        void execute(uint16_t A[_NBR_OF_SERVO], uint16_t O[_NBR_OF_SERVO], uint16_t T, double phase_diff[_NBR_OF_SERVO], float steps);
+        void execute(int16_t A[_NBR_OF_SERVO], int16_t O[_NBR_OF_SERVO], uint16_t T, double phase_diff[_NBR_OF_SERVO], float steps);
         //-- Attach & detach functions
         void attachServos();
         void detachServos();
@@ -62,7 +62,7 @@ class OttoServo
         //-- Predetermined Motion Functions
         void moveSingle(uint8_t position, uint8_t servo_number);
         void moveServos(uint32_t time, uint8_t  servo_target[]);
-        void oscillateServos(uint16_t A[_NBR_OF_SERVO], uint16_t O[_NBR_OF_SERVO], uint16_t T, double phase_diff[_NBR_OF_SERVO], float cycle=1);
+        void oscillateServos(int16_t A[_NBR_OF_SERVO], int16_t O[_NBR_OF_SERVO], uint16_t T, double phase_diff[_NBR_OF_SERVO], float cycle=1);
         //-- HOME = Otto at rest position
         void home(uint32_t time = 500);
 };

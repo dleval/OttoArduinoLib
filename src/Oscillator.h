@@ -23,8 +23,8 @@ class Oscillator
     void attach(int pin, bool rev =false);
     void detach();
     
-    void SetA(uint16_t A) {_A=A;};
-    void SetO(uint16_t O) {_O=O;};
+    void SetA(int16_t A) {_A=A;};
+    void SetO(int16_t O) {_O=O;};
     void SetPh(double Ph) {_phase0=Ph;};
     void SetT(uint16_t T);
     void SetTrim(int8_t trim){_trim=trim;};
@@ -43,8 +43,8 @@ class Oscillator
     Servo _servo;
     
     //-- Oscillators parameters
-    uint16_t _A;  //-- Amplitude (degrees)
-    uint16_t _O;  //-- Offset (degrees)
+    int16_t _A;  //-- Amplitude (degrees)
+    int16_t _O;  //-- Offset (degrees)
     uint16_t _T;  //-- Period (miliseconds)
     double _phase0;   //-- Phase (radians)
     

@@ -209,7 +209,7 @@ void OttoServo::moveSingle(uint8_t position, uint8_t servo_number)
  * @param phase_diff 
  * @param cycle 
  */
-void OttoServo::oscillateServos(uint16_t A[_NBR_OF_SERVO], uint16_t O[_NBR_OF_SERVO], uint16_t T, double phase_diff[_NBR_OF_SERVO], float cycle)
+void OttoServo::oscillateServos(int16_t A[_NBR_OF_SERVO], int16_t O[_NBR_OF_SERVO], uint16_t T, double phase_diff[_NBR_OF_SERVO], float cycle)
 {
 
   for (int i=0; i<_NBR_OF_SERVO; i++) {
@@ -235,7 +235,7 @@ void OttoServo::oscillateServos(uint16_t A[_NBR_OF_SERVO], uint16_t O[_NBR_OF_SE
  * @param phase_diff 
  * @param steps 
  */
-void OttoServo::execute(uint16_t A[_NBR_OF_SERVO], uint16_t O[_NBR_OF_SERVO], uint16_t T, double phase_diff[_NBR_OF_SERVO], float steps = 1.0)
+void OttoServo::execute(int16_t A[_NBR_OF_SERVO], int16_t O[_NBR_OF_SERVO], uint16_t T, double phase_diff[_NBR_OF_SERVO], float steps = 1.0)
 {
     attachServos();
     if(_isOttoResting == true) _isOttoResting = false;

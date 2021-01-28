@@ -1,5 +1,5 @@
 /**
- * @file OttoLee.h
+ * @file Otto.h
  * @author your name (you@domain.com)
  * @brief 
  * @version 1.0
@@ -20,40 +20,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OTTOLEE_h
-#define OTTOLEE_h
+#ifndef OTTO_h
+#define OTTO_h
 
 #include "OttoGlobal.h"
 #include "OttoSound.h"
 #include "OttoSensor.h"
 #include "OttoServo.h"
 
-#define _NBR_OF_SERVO   7
+#define _NBR_OF_SERVO   4
 
 
-
-/**
- * @brief Otto Lee Driver
- * 
- */
-class OttoLee: public OttoSound, public OttoSensor, public OttoServo<_NBR_OF_SERVO>
+class Otto: public OttoSound, public OttoSensor, public OttoServo<_NBR_OF_SERVO>
 {
     private:
-        
+        /* data */
     public:
-        OttoLee(uint8_t legLeft, uint8_t legRight, uint8_t footLeft, uint8_t footRight, uint8_t armLeft, uint8_t armRight, uint8_t head, uint8_t pinNoiseSensor, uint8_t pinBuzzer, uint8_t pinUSTrigger, uint8_t pinUSEcho);
+        Otto(uint8_t legLeft, uint8_t legRight, uint8_t footLeft, uint8_t footRight, uint8_t pinNoiseSensor, uint8_t pinBuzzer, uint8_t pinUSTrigger, uint8_t pinUSEcho);
         //-- Otto initialization
         void init(bool load_calibration);
-        
+
         //-- Predetermined Motion Functions
         void jump(float steps=1, uint16_t T = 2000);
-        void walk(float steps=4, uint16_t T=1000, int8_t dir = FORWARD, int16_t armOsc=0, int16_t headOsc=0);
-        void turn(float steps=4, uint16_t T=2000, int8_t dir = LEFT, int16_t armOsc=0, int16_t headOsc=0);
+        void walk(float steps=4, uint16_t T=1000, int8_t dir = FORWARD);
+        void turn(float steps=4, uint16_t T=2000, int8_t dir = LEFT);
         void bend(uint16_t steps, uint16_t T, int8_t dir=LEFT);
         void shakeLeg(uint16_t steps=1, uint16_t T = 3000, int8_t dir=RIGHT);
         void updown(float steps=1, uint16_t T=1000, int16_t h = 20);
-        void handsup();
-        void handwave(int8_t dir =RIGHT);
         void swing(float steps=1, uint16_t T=1000, int16_t h=20);
         void tiptoeSwing(float steps=1, uint16_t T=900, int16_t h=20);
         void jitter(float steps=1, uint16_t T=500, int16_t h=20);
@@ -61,9 +54,9 @@ class OttoLee: public OttoSound, public OttoSensor, public OttoServo<_NBR_OF_SER
         void moonwalker(float steps=1, uint16_t T=900, int16_t h=20, int dir=LEFT);
         void crusaito(float steps=1, uint16_t T=900, int16_t h=20, int dir=FORWARD);
         void flapping(float steps=1, uint16_t T=1000, int16_t h=20, int dir=FORWARD);
-        void headNo(float steps=1, uint16_t T=1000);
 };
 
 
-#endif //OTTOLEE_h
 
+
+#endif //OTTO_h

@@ -28,6 +28,7 @@
 
 /** Configuration *************************************************************/
 // #define __USE_ARDUINO_TONE_LIB      1
+#define POLY_DELTA  14
 
 /* Song List ******************************************************************/
 #define S_connection 	    0
@@ -50,6 +51,8 @@
 #define S_fart2			    17
 #define S_fart3			    18
 
+#define SongSilentNight     128
+
 /******************************************************************************/
 
 /**
@@ -69,6 +72,8 @@ public:
     void bendTones(float initFrequency, float finalFrequency, float prop, long noteDuration, int silentDuration);
     void sing(uint8_t songName);
     void r2d2();
+    void songSilentNight(void);
+    void songTetris(void);
 };
 
 #endif //OTTOSOUND_h

@@ -1,11 +1,14 @@
 #######################################
-# Syntax Coloring Map For OttoLeeArduinoLib
+# Syntax Coloring Map For OttoArduinoLib
 #######################################
 # Class
 #######################################
 
 OttoLee			KEYWORD1
+Otto            KEYWORD1
 OttoSound       KEYWORD1
+OttoSensor      KEYWORD1
+OttoServo       KEYWORD1
 
 #######################################
 # Datatypes
@@ -18,13 +21,39 @@ LEDnum_t		KEYWORD1
 #######################################	
 
 init					KEYWORD2
-attachServos			KEYWORD2
-detachServos			KEYWORD2
-setTrims				KEYWORD2
-saveTrimsOnEEPROM		KEYWORD2
+jump					KEYWORD2
+walk					KEYWORD2
+turn					KEYWORD2
+bend					KEYWORD2
+shakeLeg				KEYWORD2
+updown					KEYWORD2
+handsup					KEYWORD2
+handwave				KEYWORD2
+swing					KEYWORD2
+tiptoeSwing				KEYWORD2
+jitter					KEYWORD2
+ascendingTurn			KEYWORD2
+moonwalker				KEYWORD2
+crusaito				KEYWORD2
+flapping				KEYWORD2
+headNo					KEYWORD2
+
+initServo               KEYWORD2
+setTrims                KEYWORD2
+saveTrimsOnEEPROM       KEYWORD2
+loadTrimsFromEEPROM     KEYWORD2
+moveSingle              KEYWORD2
+moveServos              KEYWORD2
+oscillateServos         KEYWORD2
+home                    KEYWORD2
 
 bendTones               KEYWORD2
 sing                    KEYWORD2
+r2d2                    KEYWORD2
+songSilentNight         KEYWORD2
+
+getNoise			    KEYWORD2
+getDistance			    KEYWORD2
 
 #######################################
 # Constants
@@ -57,4 +86,6 @@ S_confused 		    LITERAL1
 S_fart1			    LITERAL1
 S_fart2			    LITERAL1
 S_fart3			    LITERAL1
+
+SongSilentNight     LITERAL1
     

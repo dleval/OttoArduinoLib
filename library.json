@@ -1,10 +1,10 @@
 {
-  "name": "OttoLeeArduinoLib",
+  "name": "OttoArduinoLib",
   "keywords": "otto, robot, driver",
-  "description": "Arduino library for controlling the Otto Lee robot",
+  "description": "Arduino library for controlling the Otto robot",
   "repository": {
     "type": "git",
-    "url": "https://github.com/DLE-Dev/OttoLeeArduinoLib.git"
+    "url": "https://github.com/DLE-Dev/OttoArduinoLib.git"
   },
   "authors": [
     {

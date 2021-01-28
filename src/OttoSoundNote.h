@@ -23,6 +23,8 @@
 #ifndef OTTOSOUNDNOTE_h
 #define OTTOSOUNDNOTE_h
 
+#define  note_R   (0)
+
 // Reference:  This list was adapted from the table located here:
 //    http://www.phy.mtu.edu/~suits/notefreqs.html
 #define  note_C0  16.35     //C0

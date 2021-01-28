@@ -1,7 +1,7 @@
 /**
  * @file calibration.ino
  * @author David LEVAL (dleval@dle-dev.com)
- * @brief Otto Calibration Tool
+ * @brief Otto Lee Calibration Tool
  * @version 1.0
  * @date 2021-01-25
  * 
@@ -21,28 +21,25 @@
  */
 
 #include <Arduino.h>
-#include <OttoLee.h>
+#include <Otto.h>
 
 // Pinout configuration ------------------------------------------------
 #define PIN_LEG_L         2   // Left leg servo
 #define PIN_LEG_R         3   // Right leg servo
 #define PIN_FOOT_L        4   // Left foot servo
 #define PIN_FOOT_R        5   // Right foot servo
-#define PIN_ARM_L         6   // Left arm servo
-#define PIN_ARM_R         7   // Right arm servo
-#define PIN_HEAD          10  // Head servo
 #define PIN_Trigger       8   // Ultrasound distance sensor (Trigger)
 #define PIN_Echo          9   // Ultrasound distance sensor (Echo)
 #define PIN_NoiseSensor   A6
 #define PIN_Buzzer        13  // Buzzer
 
 // Global variables ----------------------------------------------------
-uint8_t positions[_NBR_OF_SERVO] = {90, 90, 90, 90, 90, 90, 90};
-int8_t trims[_NBR_OF_SERVO] = {0, 0, 0, 0, 0, 0, 0};
+uint8_t positions[_NBR_OF_SERVO] = {90, 90, 90, 90};
+int8_t trims[_NBR_OF_SERVO] = {0, 0, 0, 0};
 uint8_t servoSelection;
 
 // Otto driver object --------------------------------------------------
-OttoLee otto(PIN_LEG_L, PIN_LEG_R, PIN_FOOT_L, PIN_FOOT_R, PIN_ARM_L, PIN_ARM_R, PIN_HEAD, PIN_NoiseSensor, PIN_Buzzer, PIN_Trigger, PIN_Echo);
+OttoLee otto(PIN_LEG_L, PIN_LEG_R, PIN_FOOT_L, PIN_FOOT_R, PIN_NoiseSensor, PIN_Buzzer, PIN_Trigger, PIN_Echo);
 
 // Function prototypes -------------------------------------------------
 void helpMenu(void);
@@ -94,9 +91,6 @@ void helpMenu(void)
   Serial.println(F("'1' - trim the Right Leg"));
   Serial.println(F("'2' - trim the left Foot"));
   Serial.println(F("'3' - trim the Right Foot"));
-  Serial.println(F("'4' - trim the Left Arm"));
-  Serial.println(F("'5' - trim the Right Arm"));
-  Serial.println(F("'6' - trim the Head"));
   Serial.println(F("'w' - write the current trims to  EEPROM"));
   Serial.println("");
 }
@@ -130,9 +124,6 @@ void processUserCalibration(char c)
     case '1':
     case '2':
     case '3':
-    case '4':
-    case '5': 
-    case '6': 
       Serial.println("");
       displayServoTrimSelected(c & 0x0F);
       break;
@@ -196,9 +187,6 @@ void displayServoTrimSelected(uint8_t selection)
   if(servoSelection == 1) Serial.print(F("Selected Right Leg"));
   if(servoSelection == 2) Serial.print(F("Selected Left Foot"));
   if(servoSelection == 3) Serial.print(F("Selected Left Foot"));
-  if(servoSelection == 4) Serial.print(F("Selected Left Arm"));
-  if(servoSelection == 5) Serial.print(F("Selected Right Arm"));
-  if(servoSelection == 6) Serial.print(F("Selected Head"));
 
   Serial.print(F(" -> Trims = "));
   Serial.print(trims[servoSelection]);
@@ -211,6 +199,6 @@ void displayServoTrimSelected(uint8_t selection)
  */
 void setTrimsCalibration(void)
 {
-  otto.setTrims(trims[0], trims[1], trims[2], trims[3], trims[4], trims[5], trims[6]);
+  otto.setTrims(trims);
   otto.moveServos(200, positions);
 }

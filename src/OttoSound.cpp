@@ -20,6 +20,7 @@
  */
 
 #include <Arduino.h>
+#include "OttoSoundSong.h"
 #include "OttoSound.h"
 
 /**
@@ -215,6 +216,10 @@ void OttoSound::sing(uint8_t songName)
             bendTones(1600, 4000, 1.02, 2, 20);
             bendTones(4000, 3000, 1.02, 2, 20);
             break;
+
+        case SongSilentNight:
+            songSilentNight();
+            break;
     }
 }
 
@@ -283,5 +288,108 @@ void OttoSound::_r2d2Phrase2()
         // tone(_pinBuzzer, k + (-i * 10));          
         // delay(random(.9,2)); 
         _tone(k+(-i*10),random(.9,2),0);
+    } 
+}
+
+
+/**
+ * @brief 
+ * 
+ */
+void OttoSound::songSilentNight(void)
+{
+    int lead_note_count = sizeof(Silent_night_lead_notes) / sizeof(float);
+    int bass_note_count = sizeof(Silent_night_bass_notes) / sizeof(float);
+    int curr_lead_note = 0;
+    int curr_bass_note = 0;
+    uint16_t curr_lead_note_duration_remaining = Silent_night_lead_duration[curr_lead_note];
+    uint16_t curr_bass_note_duration_remaining = 1500;
+    float lead_freq, bass_freq;
+    uint16_t duration;
+
+    while (curr_lead_note < lead_note_count && curr_bass_note < bass_note_count) {
+        lead_freq = Silent_night_lead_notes[curr_lead_note];
+        bass_freq = Silent_night_bass_notes[curr_bass_note];
+        duration = min(curr_lead_note_duration_remaining, curr_bass_note_duration_remaining);
+
+        if (lead_freq > 0 && bass_freq > 0) {
+            //play_two_notes(lead_freq, bass_freq, duration);
+            for (unsigned long t=0; t<duration; t+=2*(POLY_DELTA+1)) {
+                _tone(lead_freq, POLY_DELTA, 1);
+                _tone(bass_freq, POLY_DELTA, 1);
+            }
+        } else if (lead_freq > 0) {
+            //play_one_note(lead_freq, duration);
+            _tone(lead_freq, duration, 1);
+        } else if (bass_freq > 0) {
+            //play_one_note(bass_freq, duration);
+            _tone(bass_freq, duration, 1);
+        } else {
+            delay( duration );
+        }
+        // Advance lead note
+        curr_lead_note_duration_remaining -= duration;
+        if(curr_lead_note_duration_remaining < 1) {
+            curr_lead_note++;
+            curr_lead_note_duration_remaining = Silent_night_lead_duration[curr_lead_note];
+        }
+        // Advance bass note
+        curr_bass_note_duration_remaining -= duration;
+        if(curr_bass_note_duration_remaining < 1) {
+            curr_bass_note++;
+            curr_bass_note_duration_remaining = 1500;
+        }
+        
+    } 
+}
+
+/**
+ * @brief 
+ * 
+ */
+void OttoSound::songTetris(void)
+{
+    int lead_note_count = sizeof(tetris_lead_notes) / sizeof(float);
+    int bass_note_count = sizeof(tetris_bass_notes) / sizeof(float);
+    int curr_lead_note = 0;
+    int curr_bass_note = 0;
+    uint16_t curr_lead_note_duration_remaining = tetris_lead_duration[curr_lead_note];
+    uint16_t curr_bass_note_duration_remaining = 1500;
+    float lead_freq, bass_freq;
+    uint16_t duration;
+
+    while (curr_lead_note < lead_note_count && curr_bass_note < bass_note_count) {
+        lead_freq = tetris_lead_notes[curr_lead_note];
+        bass_freq = tetris_bass_notes[curr_bass_note];
+        duration = min(curr_lead_note_duration_remaining, curr_bass_note_duration_remaining);
+
+        if (lead_freq > 0 && bass_freq > 0) {
+            //play_two_notes(lead_freq, bass_freq, duration);
+            for (unsigned long t=0; t<duration; t+=2*(POLY_DELTA+1)) {
+                _tone(lead_freq, POLY_DELTA, 1);
+                _tone(bass_freq, POLY_DELTA, 1);
+            }
+        } else if (lead_freq > 0) {
+            //play_one_note(lead_freq, duration);
+            _tone(lead_freq, duration, 1);
+        } else if (bass_freq > 0) {
+            //play_one_note(bass_freq, duration);
+            _tone(bass_freq, duration, 1);
+        } else {
+            delay( duration );
+        }
+        // Advance lead note
+        curr_lead_note_duration_remaining -= duration;
+        if(curr_lead_note_duration_remaining < 1) {
+            curr_lead_note++;
+            curr_lead_note_duration_remaining = tetris_lead_duration[curr_lead_note];
+        }
+        // Advance bass note
+        curr_bass_note_duration_remaining -= duration;
+        if(curr_bass_note_duration_remaining < 1) {
+            curr_bass_note++;
+            curr_bass_note_duration_remaining = 250;
+        }
+        
     } 
 }

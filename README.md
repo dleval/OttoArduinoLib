@@ -9,11 +9,9 @@ Otto Robot Arduino Library
 
 :star: Star us on GitHub — it helps!
 
-Based on the original Otto the robot project library : <a href="https://github.com/OttoDIY/OttoDIYLib">OttoDIYLib</a>
+Based on the original Otto the robot project library : [Otto DIY](https://github.com/OttoDIY/OttoDIYLib)
 
-<a href="https://dle-dev.com>
-PHOTO !!!
-</a>
+[DLE-Dev](https://dle-dev.com)
   
 ## Table of content
 - [Version](#version)
@@ -21,8 +19,14 @@ PHOTO !!!
     - [Compatibility](#compatibility)
     - [Wiring](#wiring)
 - [Installation](#installation)
+- [Usage](#usage)
+	- [Adding library](#addingLibrary)
+	- [Configuration and object](#configurationObject)
+	- [Initialization](#initialization)
+	- [Predetermined Motion Functions](#predeterminedMotionFunctions)
+	- [Sound](#sound)
+	- [Distance Sensor](#distanceSensor)
 - [How to Contribute](#HowtoContribute)
-- [Dependencies](#dependencies)
 - [License](#license)
 - [Links](#links)
 
@@ -54,7 +58,7 @@ Left Foot | 4
 Right Foot |  5 
 Left arm for Otto Lee  |  6 
 Right arm for Otto Lee |  7 
-Head for Otto Lee |  8 
+Head for Otto Lee |  10 
 
 Ultrasonic | Pin
 ------------- | -------------
@@ -75,8 +79,127 @@ Arduino IDE :
 [for more details or other ways visit this link](https://www.arduino.cc/en/Guide/Libraries) 
 
 Platform IO :
+1. Edit the "platformio.ini" file of your project. 
+2. Add parameters: 
+'''
+lib_deps =
+	DLE-Dev/OttoArduinoLib
+'''
 
-## Dependencies
+## Usage
+
+### Adding library
+
+Add the header corresponding to the robot model at the start of the Arduino sketch. 
+
+Robot Otto :
+'''
+#include <Otto.h>
+'''
+Robot Otto Lee :
+'''
+#include <OttoLee.h>
+'''
+
+### Configuration and object
+
+When creating the robot control object, all the pins must be configured.
+Example :
+'''
+// Pinout configuration ------------------------------------------------
+#define PIN_LEG_L         2   // Left leg servo
+#define PIN_LEG_R         3   // Right leg servo
+#define PIN_FOOT_L        4   // Left foot servo
+#define PIN_FOOT_R        5   // Right foot servo
+#define PIN_ARM_L         6   // Left arm servo
+#define PIN_ARM_R         7   // Right arm servo
+#define PIN_HEAD          10  // Head servo
+#define PIN_Trigger       8   // Ultrasound distance sensor (Trigger)
+#define PIN_Echo          9   // Ultrasound distance sensor (Echo)
+#define PIN_NoiseSensor   A6
+#define PIN_Buzzer        13  // Buzzer
+// Otto driver object --------------------------------------------------
+OttoLee otto(PIN_LEG_L, PIN_LEG_R, PIN_FOOT_L, PIN_FOOT_R, PIN_ARM_L, PIN_ARM_R, PIN_HEAD, PIN_NoiseSensor, PIN_Buzzer, PIN_Trigger, PIN_Echo);
+'''
+
+### Initialization
+
+When starting the program, the 'init' function must be called with the use of servomotor calibration as a parameter. 
+It is best to place the servomotors in their home position after initialization wwith 'home' function.
+
+'''
+void setup() {
+  otto.init(true);
+  otto.home();
+}
+'''
+
+### Predetermined Motion Functions
+
+Many preconfigured movements are available in the library: 
+- jump with arguments(steps, period)
+- walk with arguments(steps, period, direction, arm oscillation, head oscillation);
+- turn with arguments(steps, period, direction, arm oscillation, head oscillation);
+- bend with arguments(steps, period, direction);
+- shakeLeg with arguments(steps, period, direction);
+- updown with arguments(steps, period, height);
+- handsup
+- handwave with argument(direction);
+- swing with arguments(steps, period, height);
+- tiptoeSwing with arguments(steps, period, height);
+- jitter with arguments(steps, period, height);
+- ascendingTurn with arguments(steps, period, height);
+- moonwalker with arguments(steps, period, height, direction);
+- crusaito with arguments(steps, period, height, direction);
+- flapping with arguments(steps, period, height, direction);
+- headNo with arguments(steps, period);
+
+### Sound
+
+Otto can emit several sounds with the 'sing' function.
+'''
+otto.sing(nameOfSound);
+''' 
+List of pre-recorded sounds:
+- S_connection
+- S_disconnection
+- S_buttonPushed
+- S_mode1 
+- S_mode2
+- S_mode3
+- S_surprise
+- S_OhOoh
+- S_OhOoh2
+- S_cuddly
+- S_sleeping
+- S_happy
+- S_superHappy
+- S_happy_short
+- S_sad
+- S_confused
+- S_fart1
+- S_fart2
+- S_fart3
+
+It is possible to emit ons like the famous R2D2 robot with the 'r2d2' function.
+'''
+otto.r2d2();
+''' 
+
+The library also includes two songs: Silent Night and Tetris.
+'''
+otto.songSilentNight();
+otto.songTetris();
+'''
+
+### Distance Sensor
+
+The 'getDistance' function allows the use of the ultrasonic sensor. 
+'''
+float distance;
+distance = otto.getDistance();
+'''
+
 
 ## How to Contribute
 
@@ -95,5 +218,7 @@ license and is available for free.
 
 ## Links
 
-* [Web site](https://dle-dev.com/index.php/2020/12/01/esp-clock/)
+* [Otto DIY](https://www.ottodiy.com/)
+* [Otto DIY Github](https://github.com/OttoDIY/OttoDIYLib)
+* [DLE-Dev](https://dle-dev.com/)
 

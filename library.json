@@ -1,7 +1,8 @@
 {
   "name": "OttoArduinoLib",
-  "keywords": "otto, robot, driver",
-  "description": "Arduino library for controlling the Otto robot",
+  "version": "1.0.0",
+  "description": "Arduino library for controlling the Otto and Otto Lee robot",
+  "keywords": "otto, ottolee, robot, driver",
   "repository": {
     "type": "git",
     "url": "https://github.com/DLE-Dev/OttoArduinoLib.git"
@@ -13,12 +14,7 @@
       "maintainer": true
     }
   ],
-  "version": "1.0.0",
+  "license": "GPL-3.0-or-later",
   "frameworks": "arduino",
-  "platforms": "*",
-  "export": {
-        "exclude": [
-            "extras"
-        ]
-    }
+  "platforms": "atmelavr"
 }

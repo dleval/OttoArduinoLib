@@ -81,10 +81,10 @@ Arduino IDE :
 Platform IO :
 1. Edit the "platformio.ini" file of your project. 
 2. Add parameters: 
-'''
+```
 lib_deps =
 	DLE-Dev/OttoArduinoLib
-'''
+```
 
 ## Usage
 
@@ -93,19 +93,19 @@ lib_deps =
 Add the header corresponding to the robot model at the start of the Arduino sketch. 
 
 Robot Otto :
-'''
+```
 #include <Otto.h>
-'''
+```
 Robot Otto Lee :
-'''
+```
 #include <OttoLee.h>
-'''
+```
 
 ### Configuration and object
 
-When creating the robot control object, all the pins must be configured.
+When creating the robot control object, all the pins must be configured.<br/>
 Example :
-'''
+```
 // Pinout configuration ------------------------------------------------
 #define PIN_LEG_L         2   // Left leg servo
 #define PIN_LEG_R         3   // Right leg servo
@@ -120,19 +120,19 @@ Example :
 #define PIN_Buzzer        13  // Buzzer
 // Otto driver object --------------------------------------------------
 OttoLee otto(PIN_LEG_L, PIN_LEG_R, PIN_FOOT_L, PIN_FOOT_R, PIN_ARM_L, PIN_ARM_R, PIN_HEAD, PIN_NoiseSensor, PIN_Buzzer, PIN_Trigger, PIN_Echo);
-'''
+```
 
 ### Initialization
 
-When starting the program, the 'init' function must be called with the use of servomotor calibration as a parameter. 
+When starting the program, the 'init' function must be called with the use of servomotor calibration as a parameter. <br/>
 It is best to place the servomotors in their home position after initialization wwith 'home' function.
 
-'''
+```
 void setup() {
   otto.init(true);
   otto.home();
 }
-'''
+```
 
 ### Predetermined Motion Functions
 
@@ -157,9 +157,9 @@ Many preconfigured movements are available in the library:
 ### Sound
 
 Otto can emit several sounds with the 'sing' function.
-'''
+```
 otto.sing(nameOfSound);
-''' 
+```
 List of pre-recorded sounds:
 - S_connection
 - S_disconnection
@@ -182,23 +182,23 @@ List of pre-recorded sounds:
 - S_fart3
 
 It is possible to emit ons like the famous R2D2 robot with the 'r2d2' function.
-'''
+```
 otto.r2d2();
-''' 
+```
 
 The library also includes two songs: Silent Night and Tetris.
-'''
+```
 otto.songSilentNight();
 otto.songTetris();
-'''
+```
 
 ### Distance Sensor
 
 The 'getDistance' function allows the use of the ultrasonic sensor. 
-'''
+```
 float distance;
 distance = otto.getDistance();
-'''
+```
 
 
 ## How to Contribute

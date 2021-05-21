@@ -11,7 +11,7 @@ Otto Robot Arduino Library
 
 Based on the original Otto the robot project library : [Otto DIY](https://github.com/OttoDIY/OttoDIYLib)
 
-[DLE-Dev](https://dle-dev.com)
+[![Otto Robot](https://dle-dev.com/wp-content/uploads/2021/05/otto001.png)](https://dle-dev.com/)
   
 ## Table of content
 - [Version](#version)
@@ -83,7 +83,7 @@ Platform IO :
 2. Add parameters: 
 ```
 lib_deps =
-	DLE-Dev/OttoArduinoLib
+	dleval/OttoArduinoLib
 ```
 
 ## Usage
@@ -92,11 +92,11 @@ lib_deps =
 
 Add the header corresponding to the robot model at the start of the Arduino sketch. 
 
-Robot Otto :
+*Robot Otto :*
 ```
 #include <Otto.h>
 ```
-Robot Otto Lee :
+*Robot Otto Lee :*
 ```
 #include <OttoLee.h>
 ```
@@ -118,6 +118,7 @@ Example :
 #define PIN_Echo          9   // Ultrasound distance sensor (Echo)
 #define PIN_NoiseSensor   A6
 #define PIN_Buzzer        13  // Buzzer
+
 // Otto driver object --------------------------------------------------
 OttoLee otto(PIN_LEG_L, PIN_LEG_R, PIN_FOOT_L, PIN_FOOT_R, PIN_ARM_L, PIN_ARM_R, PIN_HEAD, PIN_NoiseSensor, PIN_Buzzer, PIN_Trigger, PIN_Echo);
 ```
@@ -153,6 +154,11 @@ Many preconfigured movements are available in the library:
 - crusaito with arguments(steps, period, height, direction);
 - flapping with arguments(steps, period, height, direction);
 - headNo with arguments(steps, period);
+
+Example for movements of 10 jumps:
+```
+otto.jump(10,2000);
+```
 
 ### Sound
 

@@ -1,16 +1,16 @@
 {
   "name": "OttoArduinoLib",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Arduino library for controlling the Otto and Otto Lee robot",
   "keywords": "otto, ottolee, robot, driver",
   "repository": {
     "type": "git",
-    "url": "https://github.com/DLE-Dev/OttoArduinoLib.git"
+    "url": "https://github.com/dleval/OttoArduinoLib"
   },
   "authors": [
     {
       "name": "david Leval",
-      "url": "https://github.com/DLE-Dev",
+      "url": "https://github.com/dleval",
       "maintainer": true
     }
   ],

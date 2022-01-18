@@ -22,8 +22,8 @@
 #include <Arduino.h>
 #include <OttoLib.h>
 
-Otto::Otto(uint8_t legLeft, uint8_t legRight, uint8_t footLeft, uint8_t footRight, uint8_t pinNoiseSensor, uint8_t pinBuzzer, uint8_t pinUSTrigger, uint8_t pinUSEcho) : 
-    OttoSound(pinBuzzer), OttoSensor(pinNoiseSensor), OttoServo()
+Otto::Otto(uint8_t legLeft, uint8_t legRight, uint8_t footLeft, uint8_t footRight, uint8_t pinNoiseSensor, uint8_t pinBuzzer, uint8_t pinUSTrigger, uint8_t pinUSEcho, uint8_t pinCSMatrix) : 
+    OttoSound(pinBuzzer), OttoSensor(pinNoiseSensor), OttoServo(), OttoMouth(pinCSMatrix)
 {
     uint8_t servoPin[_NBR_OF_SERVO];
 
@@ -38,7 +38,7 @@ Otto::Otto(uint8_t legLeft, uint8_t legRight, uint8_t footLeft, uint8_t footRigh
 }
 
 Otto::Otto() :
-    OttoSound(13), OttoSensor(A6), OttoServo()
+    OttoSound(13), OttoSensor(A6), OttoServo(), OttoMouth(A2)
 {
     //TODO !!!
 }

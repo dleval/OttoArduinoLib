@@ -22,6 +22,8 @@
 #ifndef __OTTO_LIB_MOUTHS_h
 #define __OTTO_LIB_MOUTHS_h
 
+#include <stdint.h>
+
 typedef enum {
     zero = 0,
     one,
@@ -62,5 +64,21 @@ typedef enum {
     adivinawi,
     wave,
 }ottoAnimationMouths_t;
+
+class OttoMouth
+{
+    private:
+        uint8_t _pinCS;
+    public:
+        OttoMouth(uint8_t pinCS);
+        ~OttoMouth();
+        void putMouth(ottoMouths_t mouth, bool predefined = true);
+        void putAnimationMouth(ottoAnimationMouths_t anim, int index);
+        void clearMouth();
+        void initMATRIX(int DIN, int CS, int CLK, int rotate);
+        void matrixIntensity(int intensity);
+        void setLed(byte X, byte Y, byte value);
+        void writeText (const char * s, byte scrollspeed);
+};
 
 #endif //__OTTO_LIB_MOUTHS_h

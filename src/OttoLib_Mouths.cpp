@@ -1,37 +1,50 @@
 #include <Arduino.h>
-#include <OttoLib.h>
+#include "OttoLib_Mouths.h"
 
-void Otto::putMouth(ottoMouths_t mouth, bool predefined = true)
+//#include <OttoLib.h>
+
+OttoMouth::OttoMouth(uint8_t pinCS)
+{
+
+}
+
+OttoMouth::~OttoMouth()
+{
+}
+
+
+
+
+void OttoMouth::putMouth(ottoMouths_t mouth, bool predefined = true)
 {
     //TODO !!!
 }
 
-void Otto::putAnimationMouth(ottoAnimationMouths_t anim, int index)
+void OttoMouth::putAnimationMouth(ottoAnimationMouths_t anim, int index)
 {
     //TODO !!!
 }
 
-void Otto::clearMouth()
+void OttoMouth::clearMouth()
 {
     //TODO !!!
 }
 
-
-void Otto::initMATRIX(int DIN, int CS, int CLK, int rotate)
+void OttoMouth::initMATRIX(int DIN, int CS, int CLK, int rotate)
 {
     //TODO !!!
 }
 
-void Otto::matrixIntensity(int intensity)
+void OttoMouth::matrixIntensity(int intensity)
 {
     //TODO !!!
 }
-void Otto::setLed(byte X, byte Y, byte value)
+void OttoMouth::setLed(byte X, byte Y, byte value)
 {
     //TODO !!!
 }
 
-void Otto::writeText (const char * s, byte scrollspeed)
+void OttoMouth::writeText (const char * s, byte scrollspeed)
 {
     //TODO !!!
 }

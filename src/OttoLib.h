@@ -31,12 +31,12 @@
 
 #define _NBR_OF_SERVO   4
 
-class Otto: public OttoSound, public OttoSensor, public OttoServo<_NBR_OF_SERVO>
+class Otto: public OttoSound, public OttoSensor, public OttoMouth, public OttoServo<_NBR_OF_SERVO>
 {
     private:
         /* data */
     public:
-        Otto(uint8_t legLeft, uint8_t legRight, uint8_t footLeft, uint8_t footRight, uint8_t pinNoiseSensor, uint8_t pinBuzzer, uint8_t pinUSTrigger, uint8_t pinUSEcho);
+        Otto(uint8_t legLeft, uint8_t legRight, uint8_t footLeft, uint8_t footRight, uint8_t pinNoiseSensor, uint8_t pinBuzzer, uint8_t pinUSTrigger, uint8_t pinUSEcho, uint8_t pinCSMatrix);
         //-- Otto initialization
         void init(bool load_calibration);
 
@@ -61,16 +61,6 @@ class Otto: public OttoSound, public OttoSensor, public OttoServo<_NBR_OF_SERVO>
         /* OttoDIYLib compability */
         Otto();
         void init(int YL, int YR, int RL, int RR, bool load_calibration, int Buzzer);
-
-        //-- Mouth & Animations 
-        //TODO : implement Otto Mouths class
-        void putMouth(ottoMouths_t mouth, bool predefined = true);
-        void putAnimationMouth(ottoAnimationMouths_t anim, int index);
-        void clearMouth();
-        void initMATRIX(int DIN, int CS, int CLK, int rotate);
-        void matrixIntensity(int intensity);
-        void setLed(byte X, byte Y, byte value);
-        void writeText (const char * s, byte scrollspeed);
 };
 
 

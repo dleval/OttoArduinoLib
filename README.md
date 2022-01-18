@@ -11,6 +11,8 @@ Otto Robot Arduino Library
 
 Based on the original Otto the robot project library : [Otto DIY](https://github.com/OttoDIY/OttoDIYLib)
 
+> :warning: **This is not the original library. Programs written for the official OttoDIYLib library are not compatible.** <br>The compatibility will be implemented in a future version.
+
 [![Otto Robot](https://dle-dev.com/wp-content/uploads/2021/05/otto001.png)](https://dle-dev.com/)
   
 ## Table of content

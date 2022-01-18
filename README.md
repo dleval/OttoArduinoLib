@@ -5,13 +5,14 @@
 Otto Robot Arduino Library
 ======================
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-![version](https://img.shields.io/badge/version-1.0-blue)
+![version](https://img.shields.io/badge/version-1.1-blue)
 
 :star: Star us on GitHub — it helps!
 
 Based on the original Otto the robot project library : [Otto DIY](https://github.com/OttoDIY/OttoDIYLib)
 
-> :warning: **This is not the original library. Programs written for the official OttoDIYLib library are not compatible.** <br>The compatibility will be implemented in a future version.
+> :warning: **This is not the original library.** <br>
+> Implementation of the backward compatibility with the OttoDIYLib library : ![20%](https://progress-bar.dev/20)
 
 [![Otto Robot](https://dle-dev.com/wp-content/uploads/2021/05/otto001.png)](https://dle-dev.com/)
   
@@ -98,7 +99,7 @@ Add the header corresponding to the robot model at the start of the Arduino sket
 
 *Robot Otto :*
 ```
-#include <Otto.h>
+#include <OttoLib.h>
 ```
 *Robot Otto Lee :*
 ```

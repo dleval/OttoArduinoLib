@@ -1,11 +1,10 @@
 /**
- * @file Otto.h
- * @author your name (you@domain.com)
- * @brief 
- * @version 1.0
- * @date 2021-01-26
+ * @file    OttoLib.h
+ * @author  David LEVAL (dleval@dle-dev.com)
+ * @brief   Otto robot driver (Header)
+ * @version 1.1
  * 
- * @copyright Copyright (c) 2021
+ * @copyright Copyright (c) 2022
  * 
  * This program is free software: you can redistribute it and/or modify  
  * it under the terms of the GNU General Public License as published by  
@@ -20,16 +19,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OTTO_h
-#define OTTO_h
+#ifndef __OTTO_LIB_h
+#define __OTTO_LIB_h
 
 #include "OttoGlobal.h"
-#include "OttoSound.h"
-#include "OttoSensor.h"
-#include "OttoServo.h"
+#include "OttoLib_Sound.h"
+#include "OttoLib_Sensor.h"
+#include "OttoLib_Servo.h"
+#include "OttoLib_Gestures.h"
+#include "OttoLib_Mouths.h"
 
 #define _NBR_OF_SERVO   4
-
 
 class Otto: public OttoSound, public OttoSensor, public OttoServo<_NBR_OF_SERVO>
 {
@@ -54,9 +54,26 @@ class Otto: public OttoSound, public OttoSensor, public OttoServo<_NBR_OF_SERVO>
         void moonwalker(float steps=1, uint16_t T=900, int16_t h=20, int dir=LEFT);
         void crusaito(float steps=1, uint16_t T=900, int16_t h=20, int dir=FORWARD);
         void flapping(float steps=1, uint16_t T=1000, int16_t h=20, int dir=FORWARD);
+
+        //-- Gestures
+        void playGesture(ottoGestures_t gesture);
+
+        /* OttoDIYLib compability */
+        Otto();
+        void init(int YL, int YR, int RL, int RR, bool load_calibration, int Buzzer);
+
+        //-- Mouth & Animations 
+        //TODO : implement Otto Mouths class
+        void putMouth(ottoMouths_t mouth, bool predefined = true);
+        void putAnimationMouth(ottoAnimationMouths_t anim, int index);
+        void clearMouth();
+        void initMATRIX(int DIN, int CS, int CLK, int rotate);
+        void matrixIntensity(int intensity);
+        void setLed(byte X, byte Y, byte value);
+        void writeText (const char * s, byte scrollspeed);
 };
 
 
 
 
-#endif //OTTO_h
+#endif //__OTTO_LIB_h

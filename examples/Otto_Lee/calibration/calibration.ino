@@ -21,7 +21,7 @@
  */
 
 #include <Arduino.h>
-#include <OttoLee.h>
+#include <OttoLeeLib.h>
 
 // Pinout configuration ------------------------------------------------
 #define PIN_LEG_L         2   // Left leg servo
@@ -212,5 +212,5 @@ void displayServoTrimSelected(uint8_t selection)
 void setTrimsCalibration(void)
 {
   otto.setTrims(trims);
-  otto.moveServos(200, positions);
+  otto._moveServos(200, positions);
 }

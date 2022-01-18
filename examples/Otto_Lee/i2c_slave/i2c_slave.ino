@@ -21,7 +21,7 @@
  */
 
 #include <Arduino.h>
-#include <OttoLee.h>
+#include <OttoLeeLib.h>
 #include <Wire.h>
 
 // Pinout configuration ------------------------------------------------

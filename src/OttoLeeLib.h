@@ -1,11 +1,10 @@
 /**
- * @file OttoLee.h
- * @author your name (you@domain.com)
- * @brief 
- * @version 1.0
- * @date 2021-01-26
+ * @file    OttoLeeLib.h
+ * @author  David LEVAL (dleval@dle-dev.com)
+ * @brief   Otto Lee robot driver (Header)
+ * @version 1.1
  * 
- * @copyright Copyright (c) 2021
+ * @copyright Copyright (c) 2022
  * 
  * This program is free software: you can redistribute it and/or modify  
  * it under the terms of the GNU General Public License as published by  
@@ -24,9 +23,9 @@
 #define OTTOLEE_h
 
 #include "OttoGlobal.h"
-#include "OttoSound.h"
-#include "OttoSensor.h"
-#include "OttoServo.h"
+#include "OttoLib_Sound.h"
+#include "OttoLib_Sensor.h"
+#include "OttoLib_Servo.h"
 
 #define _NBR_OF_SERVO   7
 

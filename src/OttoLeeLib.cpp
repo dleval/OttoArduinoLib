@@ -1,10 +1,10 @@
 /**
- * @file OttoLee.cpp
- * @author David LEVAL (dleval@senstronic.com)
- * @version 1.0
- * @date 2021-01-26
+ * @file    OttoLeeLib.cpp
+ * @author  David LEVAL (dleval@dle-dev.com)
+ * @brief   Otto Lee robot driver
+ * @version 1.1
  * 
- * @copyright Copyright (c) 2021
+ * @copyright Copyright (c) 2022
  * 
  * This program is free software: you can redistribute it and/or modify  
  * it under the terms of the GNU General Public License as published by  
@@ -20,7 +20,7 @@
  */
 
 #include <Arduino.h>
-#include <OttoLee.h>
+#include <OttoLeeLib.h>
 
 /**
  * @brief Construct a new Otto Lee:: Otto Lee object
@@ -77,9 +77,9 @@ void OttoLee::init(bool load_calibration)
 void OttoLee::jump(float steps, uint16_t T)
 {
     uint8_t up[_NBR_OF_SERVO]={90,90,150,30,110,70,90};
-    moveServos(T,up);
+    _moveServos(T,up);
     uint8_t down[_NBR_OF_SERVO]={90,90,90,90,90,90,90};
-    moveServos(T,down);
+    _moveServos(T,down);
 }
 
 /**
@@ -168,10 +168,10 @@ void OttoLee::bend(uint16_t steps, uint16_t T, int8_t dir)
 
     //Bend movement
     for (uint16_t i=0;i<steps;i++) {
-        moveServos(T2/2,bend1);
-        moveServos(T2/2,bend2);
+        _moveServos(T2/2,bend1);
+        _moveServos(T2/2,bend2);
         delay(T*0.8);
-        moveServos(500,homes);
+        _moveServos(500,homes);
     }
 }
 
@@ -212,15 +212,15 @@ void OttoLee::shakeLeg(uint16_t steps, uint16_t T, int8_t dir)
 
     for (uint16_t j=0; j<steps;j++) {
         //Bend movement
-        moveServos(T2/2,shake_leg1);
-        moveServos(T2/2,shake_leg2);
+        _moveServos(T2/2,shake_leg1);
+        _moveServos(T2/2,shake_leg2);
         //Shake movement
         for (uint16_t i=0;i<numberLegMoves;i++)
         {
-        moveServos(T/(2*numberLegMoves),shake_leg3);
-        moveServos(T/(2*numberLegMoves),shake_leg2);
+        _moveServos(T/(2*numberLegMoves),shake_leg3);
+        _moveServos(T/(2*numberLegMoves),shake_leg2);
         }
-        moveServos(500,homes); //Return to home position
+        _moveServos(500,homes); //Return to home position
     }
     
     delay(T);
@@ -254,7 +254,7 @@ void OttoLee::updown(float steps, uint16_t T, int16_t h)
 void OttoLee::handsup()
 {
     uint8_t homes[_NBR_OF_SERVO]={90, 90, 90, 90, 20, 160, 90}; //
-    moveServos(500,homes);   //Move the servos in half a second
+    _moveServos(500,homes);   //Move the servos in half a second
 }
 
 /**

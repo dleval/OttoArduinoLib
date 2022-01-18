@@ -1,23 +1,11 @@
 /**
- * @file OttoServo.h
- * @author David LEVAL (dleval@dle-dev.com)
- * @brief 
- * @version 1.0
- * @date 2021-01-26
+ * @file    OttoLib_Servo.h
+ * @author  David LEVAL (dleval@dle-dev.com)
+ * @brief   Otto servo driver
+ * @version 1.1
  * 
- * @copyright Copyright (c) 2021
+ * @copyright Copyright (c) 2022
  * 
- * This program is free software: you can redistribute it and/or modify  
- * it under the terms of the GNU General Public License as published by  
- * the Free Software Foundation, version 3.
- *
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License 
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef OTTOSERVO_h
@@ -27,6 +15,8 @@
 #include <EEPROM.h>
 #include <stdint.h>
 #include "Oscillator.h"
+
+#define SERVO_LIMIT_DEFAULT 240
 
 /**
  * @brief Otto Servo Driver
@@ -63,11 +53,20 @@ class OttoServo
         void saveTrimsOnEEPROM();
         int8_t loadTrimsFromEEPROM(uint8_t servoNumber);
         //-- Predetermined Motion Functions
-        void moveSingle(uint8_t position, uint8_t servo_number);
-        void moveServos(uint32_t time, uint8_t  servo_target[]);
+        void _moveSingle(uint8_t position, uint8_t servo_number);
+        void _moveServos(uint32_t time, uint8_t  servo_target[]);
         void oscillateServos(int16_t A[N], int16_t O[N], uint16_t T, double phase_diff[N], float cycle=1);
         //-- HOME = Otto at rest position
         void home(uint32_t time = 500);
+
+        /* OttoDIYLib compability */
+        void setTrims(int YL, int YR, int RL, int RR);
+        bool getRestState();
+        void setRestState(bool state);
+
+        /* Servo limitation */
+        void enableServoLimit(int speed_limit_degree_per_sec = SERVO_LIMIT_DEFAULT);
+        void disableServoLimit();
 };
 
 
@@ -162,6 +161,12 @@ void OttoServo<N>::setTrims(int8_t *trim)
     }
 }
 
+template <uint8_t N>
+void OttoServo<N>::setTrims(int YL, int YR, int RL, int RR)
+{
+    //TODO !!!
+}
+
 /**
  * @brief Save all trims on EEPROM
  * 
@@ -202,7 +207,7 @@ int8_t OttoServo<N>::loadTrimsFromEEPROM(uint8_t servoNumber)
  * @param servo_target 
  */
 template <uint8_t N>
-void OttoServo<N>::moveServos(uint32_t time, uint8_t  servo_target[]) 
+void OttoServo<N>::_moveServos(uint32_t time, uint8_t  servo_target[]) 
 {
     attachServos();
     if(_isOttoResting == true){
@@ -233,7 +238,7 @@ void OttoServo<N>::moveServos(uint32_t time, uint8_t  servo_target[])
  * @param servo_number 
  */
 template <uint8_t N>
-void OttoServo<N>::moveSingle(uint8_t position, uint8_t servo_number) 
+void OttoServo<N>::_moveSingle(uint8_t position, uint8_t servo_number) 
 {
     if (position > 180) position = 90;
     if (position < 0) position = 90;
@@ -315,11 +320,50 @@ void OttoServo<N>::home(uint32_t time)
 
     if(_isOttoResting == false) { //Go to rest position only if necessary
         for(uint8_t i=0; i<N; i++) homes[i] = 90; //All the servos at rest position
-        moveServos(time,homes); 
+        _moveServos(time,homes); 
 
         detachServos();
         _isOttoResting = true;
     }
+}
+
+/**
+ * @brief 
+ * 
+ * @tparam N 
+ * @return true 
+ * @return false 
+ */
+template <uint8_t N>
+bool OttoServo<N>::getRestState()
+{
+    return _isOttoResting;
+}
+
+/**
+ * @brief 
+ * 
+ * @tparam N 
+ * @param state 
+ */
+template <uint8_t N>
+void OttoServo<N>::setRestState(bool state)
+{
+    _isOttoResting = state;
+}
+
+/** Servo Limit *************************************************************/
+
+template <uint8_t N>
+void OttoServo<N>::enableServoLimit(int speed_limit_degree_per_sec = SERVO_LIMIT_DEFAULT)
+{
+    //TODO !!!
+}
+
+template <uint8_t N>
+void OttoServo<N>::disableServoLimit()
+{
+    //TODO !!!
 }
 
 #endif //OTTOSERVO_h

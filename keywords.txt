@@ -37,15 +37,28 @@ moonwalker				KEYWORD2
 crusaito				KEYWORD2
 flapping				KEYWORD2
 headNo					KEYWORD2
+playGesture             KEYWORD2
+
+putMouth                KEYWORD2
+putAnimationMouth       KEYWORD2
+clearMouth              KEYWORD2
+initMATRIX              KEYWORD2
+matrixIntensity         KEYWORD2
+setLed                  KEYWORD2
+writeText               KEYWORD2
 
 initServo               KEYWORD2
 setTrims                KEYWORD2
 saveTrimsOnEEPROM       KEYWORD2
 loadTrimsFromEEPROM     KEYWORD2
-moveSingle              KEYWORD2
-moveServos              KEYWORD2
+_moveSingle             KEYWORD2
+_moveServos             KEYWORD2
 oscillateServos         KEYWORD2
 home                    KEYWORD2
+getRestState            KEYWORD2
+setRestState            KEYWORD2
+enableServoLimit        KEYWORD2
+disableServoLimit       KEYWORD2
 
 bendTones               KEYWORD2
 sing                    KEYWORD2
@@ -87,5 +100,53 @@ S_fart1			    LITERAL1
 S_fart2			    LITERAL1
 S_fart3			    LITERAL1
 
-SongSilentNight     LITERAL1
-    
+OttoSuperHappy      LITERAL1
+OttoSuperHappy      LITERAL1
+OttoSad             LITERAL1
+OttoSleeping        LITERAL1
+OttoFart            LITERAL1
+OttoConfused        LITERAL1
+OttoLove            LITERAL1
+OttoAngry           LITERAL1
+OttoFretful         LITERAL1
+OttoMagic           LITERAL1
+OttoWave            LITERAL1
+OttoVictory         LITERAL1
+OttoFail            LITERAL1
+
+zero                LITERAL1
+one                 LITERAL1
+two                 LITERAL1
+three               LITERAL1
+four                LITERAL1
+five                LITERAL1
+six                 LITERAL1
+seven               LITERAL1
+eight               LITERAL1
+nine                LITERAL1
+smile               LITERAL1
+happyOpen           LITERAL1
+happyClosed         LITERAL1
+heart               LITERAL1
+bigSurprise         LITERAL1
+smallSurprise       LITERAL1
+tongueOut           LITERAL1
+vamp1               LITERAL1
+vamp2               LITERAL1
+lineMouth           LITERAL1
+confused            LITERAL1
+diagonal            LITERAL1
+sad                 LITERAL1
+sadOpen             LITERAL1
+sadClosed           LITERAL1
+okMouth             LITERAL1
+xMouth              LITERAL1
+interrogation       LITERAL1
+thunder             LITERAL1
+culito              LITERAL1
+angry               LITERAL1
+
+littleUuh           LITERAL1
+dreamMouth          LITERAL1
+adivinawi           LITERAL1
+wave                LITERAL1

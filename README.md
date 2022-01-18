@@ -16,21 +16,23 @@ Based on the original Otto the robot project library : [Otto DIY](https://github
 [![Otto Robot](https://dle-dev.com/wp-content/uploads/2021/05/otto001.png)](https://dle-dev.com/)
   
 ## Table of content
-- [Version](#version)
-- [Hardware](#hardware)
-    - [Compatibility](#compatibility)
-    - [Wiring](#wiring)
-- [Installation](#installation)
-- [Usage](#usage)
-	- [Adding library](#addingLibrary)
-	- [Configuration and object](#configurationObject)
-	- [Initialization](#initialization)
-	- [Predetermined Motion Functions](#predeterminedMotionFunctions)
-	- [Sound](#sound)
-	- [Distance Sensor](#distanceSensor)
-- [How to Contribute](#HowtoContribute)
-- [License](#license)
-- [Links](#links)
+- [Otto Robot Arduino Library](#otto-robot-arduino-library)
+	- [Table of content](#table-of-content)
+	- [Version](#version)
+	- [Hardware](#hardware)
+		- [Compatibility](#compatibility)
+		- [Wiring](#wiring)
+	- [Installation](#installation)
+	- [Usage](#usage)
+		- [Adding library](#adding-library)
+		- [Configuration and object](#configuration-and-object)
+		- [Initialization](#initialization)
+		- [Predetermined Motion Functions](#predetermined-motion-functions)
+		- [Sound](#sound)
+		- [Distance Sensor](#distance-sensor)
+	- [How to Contribute](#how-to-contribute)
+	- [License](#license)
+	- [Links](#links)
 
 
 ## Version
@@ -45,8 +47,8 @@ Arduino NANO (or UNO)
 
 Robot         | Include use
 ------------- | -------------
-Otto          | "Otto.h"
-Otto Lee      | "OttoLee.h"
+Otto          | "OttoLib.h"
+Otto Lee      | "OttoLeeLib.h"
 
 ### Wiring
 
@@ -100,7 +102,7 @@ Add the header corresponding to the robot model at the start of the Arduino sket
 ```
 *Robot Otto Lee :*
 ```
-#include <OttoLee.h>
+#include <OttoLeeLib.h>
 ```
 
 ### Configuration and object

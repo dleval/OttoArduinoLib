@@ -1,27 +1,16 @@
 /**
- * @file OttoSound.cpp
- * @author David LEVAL (dleval@dle-dev.com)
- * @version 1.0
- * @date 2021-01-21
+ * @file    OttoLib_Sound.cpp
+ * @author  David LEVAL (dleval@dle-dev.com)
+ * @brief   Otto sound driver
+ * @version 1.1
  * 
- * @copyright Copyright (c) 2021
+ * @copyright Copyright (c) 2022
  * 
- * This program is free software: you can redistribute it and/or modify  
- * it under the terms of the GNU General Public License as published by  
- * the Free Software Foundation, version 3.
- *
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License 
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <Arduino.h>
 #include "OttoSoundSong.h"
-#include "OttoSound.h"
+#include "OttoLib_Sound.h"
 
 /**
  * @brief Construct a new OttoSound::OttoSound object
@@ -215,10 +204,6 @@ void OttoSound::sing(uint8_t songName)
         case S_fart3:
             bendTones(1600, 4000, 1.02, 2, 20);
             bendTones(4000, 3000, 1.02, 2, 20);
-            break;
-
-        case SongSilentNight:
-            songSilentNight();
             break;
     }
 }
